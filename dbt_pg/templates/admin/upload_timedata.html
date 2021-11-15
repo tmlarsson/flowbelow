@@ -4,8 +4,8 @@
     <div>
         <h1>Import sensors via CSV file</h1>
         <p>The CSV file should be delimited with ";" and have the following form:</p>
-        <p>fid ; id ; Sensor ID ; Sensor typ ; Placement ; Masl. ; X ; Y ; Coordinate system</p>
-        <p>Where Sensor ID, X, Y, Masl. and Coordinate system are obligatory.</p>
+        <p>Sensor ID ; Timestamp ; Masl. ; Placement ; Sensor type ; Is filtered</p>
+        <p>Where all are obligatory.</p>
         <p>Note that the first row is skipped due to column names.</p>
         <form action="." method="POST" enctype="multipart/form-data">
             {{ form.as_p }}

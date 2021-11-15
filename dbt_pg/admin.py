@@ -84,7 +84,7 @@ class CustomerAdmin(admin.ModelAdmin):
 
         form = CsvImportForm()
         data = {"form": form}
-        return render(request, "admin/csv_upload.html", data)
+        return render(request, "admin/upload_timedata.html", data)
 
 admin.site.register(Sensor, CustomerAdmin)
 admin.site.register(Sensor_time_value, CustomerAdmin)
