@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'dbt_pg',
+    'leaflet',
 ]
 
 MIDDLEWARE = [
@@ -77,10 +78,10 @@ WSGI_APPLICATION = 'flowbelow.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': '',
-        'HOST': '127.0.0.1',
+        'NAME': 'mdhhwxtc',
+        'USER': 'mdhhwxtc',
+        'PASSWORD': 'VodU1t8Hb29ByU-DpwUcmdNZswmOd1c4',
+        'HOST': 'tai.db.elephantsql.com',
         'PORT': '5432',
     }
 }
