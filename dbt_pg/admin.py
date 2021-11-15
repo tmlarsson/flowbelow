@@ -52,6 +52,10 @@ class CustomerAdmin(admin.ModelAdmin):
             url = reverse('admin:index')
             return HttpResponseRedirect(url)
 
+        form = CsvImportForm()
+        data = {"form": form}
+        return render(request, "admin/upload_sensors.html", data)
+
     def upload_timedata(self, request):
 
         if request.method == "POST":
