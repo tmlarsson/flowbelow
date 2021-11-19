@@ -119,7 +119,7 @@ class CustomerAdmin(admin.ModelAdmin):
                     id_tag=fields[0],
                     masl=fields[1],
                     ref_system=fields[2],
-                    raster=fields[3],
+                    img=fields[3],
                 )
             url = reverse('admin:index')
             return HttpResponseRedirect(url)

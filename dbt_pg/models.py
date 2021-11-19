@@ -28,6 +28,6 @@ class raster_data(models.Model):
     id_tag = models.CharField(max_length=20, default='')
     masl = models.CharField(max_length=10, default=0)
     ref_system = models.CharField(max_length=20,default='')
-    img = models.CharField(max_length=100,default='')
+    img = models.CharField(max_length=100,default='',primary_key=True)
     tr = models.CharField(max_length=20,default='')
     bl = models.CharField(max_length=20, default='')
