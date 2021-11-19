@@ -116,10 +116,10 @@ class CustomerAdmin(admin.ModelAdmin):
                     continue
                 fields = x.split(";")
                 created = raster_data.objects.update_or_create(
-                    id_tag = fields[0],
-                    masl = fields[1],
-                    ref_system = fields[2],
-                    raster = fields[3],
+                    id_tag=fields[0],
+                    masl=fields[1],
+                    ref_system=fields[2],
+                    raster=fields[3],
                 )
             url = reverse('admin:index')
             return HttpResponseRedirect(url)
@@ -127,6 +127,8 @@ class CustomerAdmin(admin.ModelAdmin):
         form = CsvImportForm()
         data = {"form": form}
         return render(request, "admin/upload_rasterdata.html", data)
+
+
 
 # Register all models in the Admin page
 admin.site.register(Sensor, CustomerAdmin)

@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.gis.db import models as m
+#from django.contrib.gis.db import models as m
 
 # Create your models here.
 class Sensor(models.Model):
@@ -24,8 +24,10 @@ class Sensor_time_value(models.Model):
     data_type = models.CharField(max_length=20, default='')
     filtered = models.CharField(max_length=20,default='')
 
-class raster_data(m.Model):
+class raster_data(models.Model):
     id_tag = models.CharField(max_length=20, default='')
     masl = models.CharField(max_length=10, default=0)
     ref_system = models.CharField(max_length=20,default='')
-    raster = m.RasterField()
+    img = models.CharField(max_length=100,default='')
+    tr = models.CharField(max_length=20,default='')
+    bl = models.CharField(max_length=20, default='')
