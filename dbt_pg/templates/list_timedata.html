@@ -7,11 +7,11 @@
 </head>
 <body>
     <h1>List of installed timedata for sensors</h1>
-    {% for sensor in timedata %}
+    {% for sensor in timeData %}
     <h2>{{ sensor.id_tag }}</h2>
     <ul>
         <li>Sensor ID: {{ sensor.id_tag }}</li>
-        <li>Timestamp: {{ sensor.timestamp }}</li>
+        <li>Timestamp: {{ sensor.time }}</li>
         <li>Meter above sea level [m]: {{ sensor.masl }}</li>
     </ul>
     {% endfor %}
