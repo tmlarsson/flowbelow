@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+    <h1>List of installed timedata for sensors</h1>
+    {% for sensor in timedata %}
+    <h2>{{ sensor.id_tag }}</h2>
+    <ul>
+        <li>Sensor ID: {{ sensor.id_tag }}</li>
+        <li>Timestamp: {{ sensor.timestamp }}</li>
+        <li>Meter above sea level [m]: {{ sensor.masl }}</li>
+    </ul>
+    {% endfor %}
+</body>
+</html>

@@ -115,11 +115,11 @@ class CustomerAdmin(admin.ModelAdmin):
                     firstline = False
                     continue
                 fields = x.split(";")
-                created = Sensor_time_value.objects.update_or_create(
+                created = raster_data.objects.update_or_create(
                     id_tag = fields[0],
                     masl = fields[1],
-                    ref_system = fields[3],
-                    raster = fields[4],
+                    ref_system = fields[2],
+                    raster = fields[3],
                 )
             url = reverse('admin:index')
             return HttpResponseRedirect(url)

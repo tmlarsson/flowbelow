@@ -19,7 +19,7 @@ class Sensor_time_value(models.Model):
     row_id = models.CharField(max_length=60, default='')
     masl = models.CharField(max_length=20, default='')
     id_tag = models.CharField(max_length=20, default='123ABC')
-    time = models.DateTimeField()
+    timestamp = models.DateTimeField()
     placement = models.CharField(max_length=50, default='')
     data_type = models.CharField(max_length=20, default='')
     filtered = models.CharField(max_length=20,default='')

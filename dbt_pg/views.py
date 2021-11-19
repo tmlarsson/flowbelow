@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import Sensor
+from .models import Sensor as S
+from .models import Sensor_time_value as ST
 
 def sensor_list_view(request):
-    sensor_objects = Sensor.objects.all()
+    sensor_objects = S.objects.all()
     context = {
         'sensor_objects': sensor_objects
     }
@@ -12,3 +13,17 @@ def sensor_list_view(request):
 def index(request):
     return render(request, 'homepage.html')
 
+def plot_timedata(request):
+    queryset = ST.objects.all().filter(id_tag='A81758FFFE066012')
+
+    context = {
+        'timedata': queryset
+    }
+    return render(request, 'timedata.html', context)
+
+def view_timedata(request):
+    timedata = ST.objects.all().filter(id_tag='A81758FFFE066012')
+    context = {
+        'timedata': timedata
+    }
+    return render(request, 'list_timedata.html', context)
