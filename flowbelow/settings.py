@@ -77,11 +77,11 @@ WSGI_APPLICATION = 'flowbelow.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis', # 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': '',
-        'HOST': '127.0.0.1',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'mdhhwxtc',
+        'USER': 'mdhhwxtc',
+        'PASSWORD': 'LKVS-PkgEjGLUDdOOYVgVskKc-NtemDP',
+        'HOST': 'tai.db.elephantsql.com',
         'PORT': '5432',
     }
 }
