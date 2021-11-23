@@ -33,7 +33,8 @@
 <div class="heading">
 <nav class="navbar fixed-top navbar-expand-sm navbar-light bg-light">
   <a href="#" class="navbar-brand">
-      <img class="d-inline-block align-top" src="FlowBelow.png" height="35" />
+      {% load static %}
+      <img class="d-inline-block align-top" src="{% static 'FlowBelow.png' %}" height="35" />
   </a>
   <button type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" class="navbar-toggler" aria-controls="navbarNav" aria-expanded="false" aria-label="Navigera menyn" >
       <span class="navbar-toggler-icon"></span>
@@ -88,7 +89,8 @@
     makemap(utbredning)
     //L.imageOverlay("pictures/23,0.PNG",[[63.84,20.32],[63.83,20.34]]).addTo(utbredning);
     L.CRS.EPSG3857
-      L.imageOverlay("test.png",[[63.838876803,20.340501222],[63.814673067,20.285697344]]).addTo(utbredning);
+        {% load static %}
+      L.imageOverlay("{% static 'Simulations/A81758FFFE04CDD8_waterlevel_27.8.PNG' %}",[[63.838876803,20.340501222],[63.814673067,20.285697344]]).addTo(utbredning);
       //20.2858872,63.8179737
       //20.29009962,63.84027712
 
