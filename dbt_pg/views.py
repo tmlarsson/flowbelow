@@ -11,7 +11,7 @@ def sensor_list_view(request):
     return render(request, 'list_sensors.html', context)
 
 def index(request):
-    return render(request, 'homepage.html')
+    return render(request, 'map.html')
 
 def plot_timedata(request):
     context = {
