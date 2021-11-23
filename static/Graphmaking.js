@@ -1,14 +1,20 @@
 var Waterlev=chartIt();
 async function chartIt(){
-  const data = await getLevelData();
+  const data2 = await getLevelData();
+  let data = [];
+  let times = [];
+    {% for dataEntry in timeData %}
+        data.push(Number('{{dataEntry.masl}}'));
+        times.push('{{dataEntry.time}}');
+    {% endfor %}
   const ctx = document.getElementById('Chart').getContext('2d');
   const myChart = new Chart(ctx, {
     type: 'line',
     data: {
-        labels: data.Time,
+        labels: times,//data.Time,
         datasets: [{
             label: 'Exempel på sensordata',
-            data: data.Level,
+            data: data,//data.Level,
             backgroundColor: ['rgba(255, 99, 132, 0.2)',  ],
 
             borderColor: ['rgba(255, 99, 132, 1)',],
@@ -34,7 +40,7 @@ async function chartIt(){
   async function getLevelData(){
     const Time = [];
     const Level = [];
-    const response = await fetch ('Data34.csv');
+    const response = await fetch ('/static/Data34.csv');
     const data = await response.text();
 
     const table = data.split('\n');

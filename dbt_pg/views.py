@@ -22,9 +22,13 @@ def plot_timedata(request):
 def view_timedata(request):
     timedata = ST.objects.all().filter(id_tag='A81758FFFE045989')
     context = {
-        'timeData': timedata
+        'timedata': timedata
     }
     return render(request, 'list_timedata.html', context)
 
 def map(request):
-    return render(request, 'map.html')
+    timedata = ST.objects.all().filter(id_tag='A81758FFFE045989')
+    context = {
+        'timeData': timedata
+    }
+    return render(request, 'map.html', context)

@@ -92,8 +92,29 @@
     <!--- Karta med sensorerna--->
     <div id="karta"></div>
     <script type = "text/javascript">
-      var karta = L.map("karta").setView([63.834219,20.315930], 13);
-      makemap(karta)
+    // SWEREF99 TM (EPSG:3006) with map's pixel origin at SWEREF99 TM coordinate (0, 0)
+    /* var crs = new L.Proj.CRS('EPSG:3006',
+    '+proj=utm +zone=33 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs',
+        {
+            resolutions: [
+                8192, 4096, 2048, 1024, 512, 256, 128
+            ],
+            origin: [0, 0]
+        })
+    var karta = new L.Map('map', {
+            crs: crs
+        });
+    L.tileLayer('http://api.geosition.com/tile/osm-bright-3006/{z}/{x}/{y}.png', {
+        maxZoom: crs.options.resolutions.length,
+        minZoom: 0,
+        continuousWorld: true,
+        attribution: 'Map data © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>, Imagery © <a href="http://www.kartena.se/">Kartena</a>'
+        }).addTo(map);
+    */
+
+    //makemap(karta)
+    var karta = L.map("karta").setView([63.834219,20.315930], 13);
+    makemap(karta)
     </script>
 
   </div>
@@ -101,6 +122,17 @@
   {% load static %}
   <script src="{% static 'Graphmaking.js' %}"></script>
   <script type = "text/javascript">
+    /*var crs = new L.Proj.CRS('EPSG:3006','+proj=utm +zone=33 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs',
+        {
+            resolutions: [
+                8192, 4096, 2048, 1024, 512, 256, 128
+            ],
+            origin: [0, 0]
+        })
+    var utbredning = new L.Map('map', {
+            crs: crs
+        });
+    */
     var utbredning = L.map("utbredning").setView([63.834219,20.315930], 13);
     makemap(utbredning)
         {% load static %}
