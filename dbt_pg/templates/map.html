@@ -24,6 +24,10 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.6.0/dist/chart.min.js"></script>
     <!--- en oklar --->
     <script src="https://unpkg.com/mappa-mundi@0.0.5/dist/mappa.js" type="text/javascript"></script>
+    <!--- Loads proj4leaflet to use SWEREF99 --->
+    <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+    <script src="proj4.js"></script>
+    <script src="proj4leaflet.js"></script>
 
 </head>
 
@@ -87,12 +91,13 @@
   <script type = "text/javascript">
     var utbredning = L.map("utbredning").setView([63.834219,20.315930], 13);
     makemap(utbredning)
-    //L.imageOverlay("pictures/23,0.PNG",[[63.84,20.32],[63.83,20.34]]).addTo(utbredning);
-    L.CRS.EPSG3857
+    L.CRS.EPSG4236
         {% load static %}
-      L.imageOverlay("{% static 'Simulations/A81758FFFE04CDD8_waterlevel_27.8.PNG' %}",[[63.838876803,20.340501222],[63.814673067,20.285697344]]).addTo(utbredning);
-      //20.2858872,63.8179737
-      //20.29009962,63.84027712
+        var map = "{% static 'Simulations/A81758FFFE04CDD8_waterlevel_27.8.PNG' %}"
+        var corner_UL = L.latLng(63.840277,20.290099)
+        var corner_LR = L.latLng(63.816073,20.336459)
+        var bounds = L.latLngBounds(corner_UL, corner_LR);
+      L.imageOverlay(map,bounds).addTo(utbredning);
 
   </script>
   <h1>
