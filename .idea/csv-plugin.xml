@@ -10,6 +10,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="/dbt_pg/templates/Data34.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value=":" />
+            </Attribute>
+          </value>
+        </entry>
       </map>
     </option>
   </component>

@@ -11,10 +11,7 @@ def sensor_list_view(request):
     return render(request, 'list_sensors.html', context)
 
 def index(request):
-    context = {
-        'timeData': ST.objects.all().filter(id_tag='A81758FFFE045989')
-    }
-    return render(request, 'homepage.html', context)
+    return render(request, 'homepage.html')
 
 def plot_timedata(request):
     context = {
@@ -28,3 +25,6 @@ def view_timedata(request):
         'timeData': timedata
     }
     return render(request, 'list_timedata.html', context)
+
+def map(request):
+    return render(request, 'map.html')
