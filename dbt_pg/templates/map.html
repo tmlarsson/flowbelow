@@ -127,7 +127,6 @@
 
             let graph_data = [];
             let graph_times = [];
-            let graph_sensor = [];
             var sensorToLook = getSelectedValue();
             {% for dataEntry in timeData %}
             if ('{{dataEntry.id_tag}}' == sensorToLook) {
@@ -142,7 +141,7 @@
                 data: {
                     labels: graph_times,
                     datasets: [{
-                        label: 'Sensor data',
+                        label: 'Data for sensor ' + sensorToLook,
                         data: graph_data,
                         backgroundColor: [
                             'rgba(255, 99, 132, 0.2)'
@@ -176,8 +175,10 @@
                 }
             {% endfor %}
             myChart.data.datasets[0].data = graph_data;
+            myChart.data.datasets[0].label = 'Data for sensor ' + sensorToLook;
             myChart.data.labels = graph_times;
             myChart.update();
+            console.log('Updated the plot')
         }
         myChart = plotData()
     </script>
