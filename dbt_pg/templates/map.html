@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Start</title>
+    <title>FlowBelow AB</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     {% load static %}
     <link href="{% static 'main.css' %}" rel="stylesheet"/>
@@ -65,11 +65,6 @@
               </a>
           </li>
           <li class="nav-item active ">
-              <a href="/timedata" class="nav-link">
-                  Tidsdata
-              </a>
-          </li>
-          <li class="nav-item active ">
               <a href="/sensors" class="nav-link">
                   Sensorer
               </a>
@@ -92,21 +87,20 @@
     </div>
     <!--- Karta med sensorerna--->
     <div id="karta">
+        var sensorToLook = getSelectedValue();
         <select id=list onchange="updatePlot();">
-            <option value='A81758FFFE066012'>Rör innan Lilljansberget</option>
-            <option value='A81758FFFE046F4D'>Liljansberget träbro</option>
-            <option value='A81758FFFE066024'>Under Lilljansvägen</option>
-            <option value='A81758FFFE045996'>Mariehem rör</option>
-            <option value='A81758FFFE045989'>Mariehem träbro</option>
-            <option value='A81758FFFE04CDD8'>Ankdammen</option>
+            {% for sensorData in sensor_objects %}
+                <option value='{{ sensorData.id_tag }}'>{{sensorData.id_tag}} : {{ sensorData.placement }}</option>
+            {% endfor %}
         </select>
+
         <script>
             function getSelectedValue(){
                 var selectedValue = document.getElementById("list").value;
                 console.log(selectedValue);
                 return selectedValue
             }
-            getSelectedValue();
+
         </script>
     </div>
 
