@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
@@ -119,9 +120,47 @@
 
   </div>
   </div>
-  {% load static %}
-  <script src="{% static 'Graphmaking.js' %}"></script>
+
+<!---  {% load static %} <script src="{% static 'Graphmaking.js' %}"></script> --->
+    <script>
+    let graph_data = [];
+    let graph_times = [];
+      {% for dataEntry in timeData %}
+          graph_data.push(Number('{{dataEntry.masl}}'));
+          graph_times.push('{{dataEntry.time}}');
+      {% endfor %}
+
+      const ctx = document.getElementById('Chart').getContext('2d');
+      const myChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+              labels: graph_times,
+              datasets: [{
+                  label: 'Sensor data',
+                  data: graph_data,
+                  backgroundColor: [
+                      'rgba(255, 99, 132, 0.2)'
+
+                  ],
+                  borderColor: [
+                      'rgba(255, 99, 132, 1)'
+
+                  ],
+                  borderWidth: 1
+              }]
+          },
+          options: {
+            elements: {
+                point: {
+                    radius: 0
+                }
+            }
+          }
+      });
+    </script>
+
   <script type = "text/javascript">
+
     /*var crs = new L.Proj.CRS('EPSG:3006','+proj=utm +zone=33 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs',
         {
             resolutions: [
@@ -143,12 +182,16 @@
       L.imageOverlay(map,bounds).addTo(utbredning);
 
   </script>
-  <h1>
-  the value for number is:
-  <script type="text/javascript">
-    document.write(Waterlev)
-  </script>
-</h1>
 
+
+<h1>List of installed timedata for sensors</h1>
+    {% for sensor in timeData %}
+    <h2>{{ sensor.id_tag }}</h2>
+    <ul>
+        <li>Sensor ID: {{ sensor.id_tag }}</li>
+        <li>Timestamp: {{ sensor.time }}</li>
+        <li>Meter above sea level [m]: {{ sensor.masl }}</li>
+    </ul>
+    {% endfor %}
 </body>
 </html>

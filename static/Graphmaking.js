@@ -3,18 +3,28 @@ async function chartIt(){
   const data2 = await getLevelData();
   let data = [];
   let times = [];
-    {% for dataEntry in timeData %}
+  console.log({{ time }})
+  const obj = JSON.parse("{{ time|escapejs }}");
+  /*var a = "{{ timeData.time }}"
+    console.log(a.time(1))
+    for (let i = 0; i < a.time.length(); i++) {
+        console.log('Test', i)
+    }
+
+   */
+    /* {% for dataEntry in timeData %}
         data.push(Number('{{dataEntry.masl}}'));
         times.push('{{dataEntry.time}}');
     {% endfor %}
+     */
   const ctx = document.getElementById('Chart').getContext('2d');
   const myChart = new Chart(ctx, {
     type: 'line',
     data: {
-        labels: times,//data.Time,
+        labels: times,//data2.Time,
         datasets: [{
             label: 'Exempel på sensordata',
-            data: data,//data.Level,
+            data: data,//data2.Level,
             backgroundColor: ['rgba(255, 99, 132, 0.2)',  ],
 
             borderColor: ['rgba(255, 99, 132, 1)',],

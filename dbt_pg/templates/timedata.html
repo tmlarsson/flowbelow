@@ -18,21 +18,21 @@
     </div>
     <!---<canvas id="myChart" width="100px" height="40px"></canvas>-->
     <script>
-    let data = [];
-    let times = [];
+    let graph_data = [];
+    let graph_times = [];
       {% for dataEntry in timeData %}
-        data.push(Number('{{dataEntry.masl}}'));
-        times.push('{{dataEntry.time}}');
+        graph_data.push(Number('{{dataEntry.masl}}'));
+        graph_times.push('{{dataEntry.time}}');
       {% endfor %}
 
       const ctx = document.getElementById('myChart').getContext('2d');
       const myChart = new Chart(ctx, {
           type: 'line',
           data: {
-              labels: times,
+              labels: graph_times,
               datasets: [{
                   label: 'Sensor data',
-                  data: data,
+                  data: graph_data,
                   backgroundColor: [
                       'rgba(255, 99, 132, 0.2)'
 
