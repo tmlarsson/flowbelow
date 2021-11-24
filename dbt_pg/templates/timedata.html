@@ -18,11 +18,16 @@
     </div>
     <!---<canvas id="myChart" width="100px" height="40px"></canvas>-->
     <script>
+
     let graph_data = [];
     let graph_times = [];
+
       {% for dataEntry in timeData %}
-        graph_data.push(Number('{{dataEntry.masl}}'));
-        graph_times.push('{{dataEntry.time}}');
+        {% for sensorEntry in dataEntry %}
+            if sensorEntry.id_tag == 'A81758FFFE066012'
+                graph_data.push(Number('{{dataEntry.masl}}'));
+                graph_times.push('{{dataEntry.time}}');
+        {% endfor %}
       {% endfor %}
 
       const ctx = document.getElementById('myChart').getContext('2d');

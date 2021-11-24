@@ -30,6 +30,6 @@ def view_timedata(request):
 
 def map_homepage(request):
     context = {
-        'timeData': ST.objects.all().filter(id_tag='A81758FFFE045989')
+        'timeData': ST.objects.all()
     }
     return render(request, 'map.html', context)

@@ -92,7 +92,7 @@
     </div>
     <!--- Karta med sensorerna--->
     <div id="karta">
-        <select id=list onchange="getSelectedValue();">
+        <select id=list onchange="updatePlot();">
             <option value='A81758FFFE066012'>Rör innan Lilljansberget</option>
             <option value='A81758FFFE046F4D'>Liljansberget träbro</option>
             <option value='A81758FFFE066024'>Under Lilljansvägen</option>
@@ -104,7 +104,9 @@
             function getSelectedValue(){
                 var selectedValue = document.getElementById("list").value;
                 console.log(selectedValue);
+                return selectedValue
             }
+            getSelectedValue();
         </script>
     </div>
 
@@ -118,41 +120,66 @@
 
 
 <!--- Script för att plotta tidserieinformation  --->
-    <script>
-    let graph_data = [];
-    let graph_times = [];
-      {% for dataEntry in timeData %}
-          graph_data.push(Number('{{dataEntry.masl}}'));
-          graph_times.push('{{dataEntry.time}}');
-      {% endfor %}
+    <script onchange="plotData()">
 
-      const ctx = document.getElementById('Chart').getContext('2d');
-      const myChart = new Chart(ctx, {
-          type: 'line',
-          data: {
-              labels: graph_times,
-              datasets: [{
-                  label: 'Sensor data',
-                  data: graph_data,
-                  backgroundColor: [
-                      'rgba(255, 99, 132, 0.2)'
+        function plotData()
+        {
 
-                  ],
-                  borderColor: [
-                      'rgba(255, 99, 132, 1)'
-
-                  ],
-                  borderWidth: 1
-              }]
-          },
-          options: {
-            elements: {
-                point: {
-                    radius: 0
-                }
+            let graph_data = [];
+            let graph_times = [];
+            let graph_sensor = [];
+            var sensorToLook = getSelectedValue();
+            {% for dataEntry in timeData %}
+            if ('{{dataEntry.id_tag}}' == sensorToLook) {
+                graph_data.push(Number('{{dataEntry.masl}}'));
+                graph_times.push('{{dataEntry.time}}');
             }
-          }
-      });
+            {% endfor %}
+
+            const ctx = document.getElementById('Chart').getContext('2d');
+            const myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: graph_times,
+                    datasets: [{
+                        label: 'Sensor data',
+                        data: graph_data,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)'
+
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)'
+
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    elements: {
+                        point: {
+                            radius: 0
+                        }
+                    }
+                }
+            });
+            return myChart
+        }
+        function  updatePlot(){
+            let graph_data = [];
+            let graph_times = [];
+            var sensorToLook = getSelectedValue();
+            {% for dataEntry in timeData %}
+                if ('{{dataEntry.id_tag}}' == sensorToLook) {
+                    graph_data.push(Number('{{dataEntry.masl}}'));
+                    graph_times.push('{{dataEntry.time}}');
+                }
+            {% endfor %}
+            myChart.data.datasets[0].data = graph_data;
+            myChart.data.datasets[0].labels = graph_times;
+            myChart.update();
+        }
+        myChart = plotData()
     </script>
 
 <!--- Script för den vänstra kartan --->
