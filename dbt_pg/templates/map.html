@@ -87,7 +87,7 @@
     </div>
     <!--- Karta med sensorerna--->
     <div id="karta">
-        var sensorToLook = getSelectedValue();
+
         <select id=list onchange="updatePlot();">
             {% for sensorData in sensor_objects %}
                 <option value='{{ sensorData.id_tag }}'>{{sensorData.id_tag}} : {{ sensorData.placement }}</option>
