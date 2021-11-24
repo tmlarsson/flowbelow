@@ -176,7 +176,7 @@
                 }
             {% endfor %}
             myChart.data.datasets[0].data = graph_data;
-            myChart.data.datasets[0].labels = graph_times;
+            myChart.data.labels = graph_times;
             myChart.update();
         }
         myChart = plotData()
