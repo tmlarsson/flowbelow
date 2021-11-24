@@ -91,37 +91,33 @@
       <canvas id="Chart"></canvas>
     </div>
     <!--- Karta med sensorerna--->
-    <div id="karta"></div>
-    <script type = "text/javascript">
-    // SWEREF99 TM (EPSG:3006) with map's pixel origin at SWEREF99 TM coordinate (0, 0)
-    /* var crs = new L.Proj.CRS('EPSG:3006',
-    '+proj=utm +zone=33 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs',
-        {
-            resolutions: [
-                8192, 4096, 2048, 1024, 512, 256, 128
-            ],
-            origin: [0, 0]
-        })
-    var karta = new L.Map('map', {
-            crs: crs
-        });
-    L.tileLayer('http://api.geosition.com/tile/osm-bright-3006/{z}/{x}/{y}.png', {
-        maxZoom: crs.options.resolutions.length,
-        minZoom: 0,
-        continuousWorld: true,
-        attribution: 'Map data © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>, Imagery © <a href="http://www.kartena.se/">Kartena</a>'
-        }).addTo(map);
-    */
-
-    //makemap(karta)
-    var karta = L.map("karta").setView([63.834219,20.315930], 13);
-    makemap(karta)
-    </script>
+    <div id="karta">
+        <select id=list onchange="getSelectedValue();">
+            <option value='A81758FFFE066012'>Rör innan Lilljansberget</option>
+            <option value='A81758FFFE046F4D'>Liljansberget träbro</option>
+            <option value='A81758FFFE066024'>Under Lilljansvägen</option>
+            <option value='A81758FFFE045996'>Mariehem rör</option>
+            <option value='A81758FFFE045989'>Mariehem träbro</option>
+            <option value='A81758FFFE04CDD8'>Ankdammen</option>
+        </select>
+        <script>
+            function getSelectedValue(){
+                var selectedValue = document.getElementById("list").value;
+                console.log(selectedValue);
+            }
+        </script>
+    </div>
 
   </div>
   </div>
 
-<!---  {% load static %} <script src="{% static 'Graphmaking.js' %}"></script> --->
+<!--- Script för den nedre kartan --->
+<script type = "text/javascript">
+
+</script>
+
+
+<!--- Script för att plotta tidserieinformation  --->
     <script>
     let graph_data = [];
     let graph_times = [];
@@ -159,6 +155,7 @@
       });
     </script>
 
+<!--- Script för den vänstra kartan --->
   <script type = "text/javascript">
 
     /*var crs = new L.Proj.CRS('EPSG:3006','+proj=utm +zone=33 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs',
@@ -172,6 +169,7 @@
             crs: crs
         });
     */
+
     var utbredning = L.map("utbredning").setView([63.834219,20.315930], 13);
     makemap(utbredning)
         {% load static %}
@@ -183,15 +181,5 @@
 
   </script>
 
-
-<h1>List of installed timedata for sensors</h1>
-    {% for sensor in timeData %}
-    <h2>{{ sensor.id_tag }}</h2>
-    <ul>
-        <li>Sensor ID: {{ sensor.id_tag }}</li>
-        <li>Timestamp: {{ sensor.time }}</li>
-        <li>Meter above sea level [m]: {{ sensor.masl }}</li>
-    </ul>
-    {% endfor %}
 </body>
 </html>
