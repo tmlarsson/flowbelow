@@ -193,23 +193,6 @@
         });
     */
 
-    /*
-    var map = L.map("utbredning").setView([63.834219,20.315930], 13);
-    makemap(map)
-    {% load static %}
-    var imageUrl = "";//"{% static 'Simulations/A81758FFFE04CDD8_waterlevel_27.8.PNG' %}"
-    console.log('First imageURL: '+imageUrl)
-    var cornerUL = L.latLng(63.840277,20.290099)
-    var cornerLR = L.latLng(63.816073,20.336459)
-    var imageBounds = L.latLngBounds(cornerUL, cornerLR);
-    image = L.imageOverlay(imageUrl, imageBounds).addTo(map);
-
-     */
-
-
-    //image2 = map.on('click', loadImage(image));
-    //image = image2;
-
     /* Define global variables */
     var map;
     var image;
@@ -234,21 +217,10 @@
         var imgPath = 'static/Simulations/'+sensorToLook+'_waterlevel_27.8.PNG'
         console.log('imgPath: '+imgPath)
 
-        //{% load static %}
-        //var imageUrl = {% static imgPath %}
         var cornerUL = L.latLng(63.840277,20.290099)
         var cornerLR = L.latLng(63.816073,20.336459)
         var imageBounds = L.latLngBounds(cornerUL, cornerLR);
-        //var imageNew = L.imageOverlay(imgPath, imageBounds).addTo(map);
-        /*
-        if (image == NULL){
 
-        }
-        else {
-            var imageNew = L.imageOverlay(imgPath, imageBounds).addTo(map);
-        }
-
-         */
 
 
 
