@@ -29,10 +29,8 @@ def view_timedata(request):
 
 
 def map_homepage(request):
-    # Get all sensor data
-    sensor_objects = S.objects.all()
     context = {
         'timeData': ST.objects.all(),
-        'sensor_objects': sensor_objects
+        'sensor_objects': S.objects.all()
     }
     return render(request, 'map.html', context)

@@ -87,8 +87,9 @@
     </div>
     <!--- Karta med sensorerna--->
     <div id="karta">
-
-        <select id=list onchange="updatePlot();">
+        <p></p>
+        <p></p>
+        <select id=list onchange="updatePlot(); loadImage();">
             {% for sensorData in sensor_objects %}
                 <option value='{{ sensorData.id_tag }}'>{{sensorData.id_tag}} : {{ sensorData.placement }}</option>
             {% endfor %}
@@ -97,7 +98,7 @@
         <script>
             function getSelectedValue(){
                 var selectedValue = document.getElementById("list").value;
-                console.log(selectedValue);
+                //console.log('Sensor from dropdown: '+selectedValue);
                 return selectedValue
             }
 
@@ -192,15 +193,80 @@
         });
     */
 
-    var utbredning = L.map("utbredning").setView([63.834219,20.315930], 13);
-    makemap(utbredning)
-        {% load static %}
-        var map = "{% static 'Simulations/A81758FFFE04CDD8_waterlevel_27.8.PNG' %}"
-        var corner_UL = L.latLng(63.840277,20.290099)
-        var corner_LR = L.latLng(63.816073,20.336459)
-        var bounds = L.latLngBounds(corner_UL, corner_LR);
-      L.imageOverlay(map,bounds).addTo(utbredning);
+    /*
+    var map = L.map("utbredning").setView([63.834219,20.315930], 13);
+    makemap(map)
+    {% load static %}
+    var imageUrl = "";//"{% static 'Simulations/A81758FFFE04CDD8_waterlevel_27.8.PNG' %}"
+    console.log('First imageURL: '+imageUrl)
+    var cornerUL = L.latLng(63.840277,20.290099)
+    var cornerLR = L.latLng(63.816073,20.336459)
+    var imageBounds = L.latLngBounds(cornerUL, cornerLR);
+    image = L.imageOverlay(imageUrl, imageBounds).addTo(map);
 
+     */
+
+
+    //image2 = map.on('click', loadImage(image));
+    //image = image2;
+
+    /* Define global variables */
+    var map;
+    var image;
+    /* Run function to make map */
+    makeMap();
+
+    /* Simulations are added when a value is selected
+    * in the dropdown menu on the page. */
+
+
+    /* Functions used for map making ------------------------------------- */
+
+    /* Funciton to create base map */
+    function makeMap(){
+        map = L.map("utbredning").setView([63.834219,20.315930], 13);
+        makemap(map)
+    }
+
+    /* Function to update map after the sensor in dropdown is changed */
+    function loadImage() {
+        var sensorToLook = getSelectedValue();
+        var imgPath = 'static/Simulations/'+sensorToLook+'_waterlevel_27.8.PNG'
+        console.log('imgPath: '+imgPath)
+
+        //{% load static %}
+        //var imageUrl = {% static imgPath %}
+        var cornerUL = L.latLng(63.840277,20.290099)
+        var cornerLR = L.latLng(63.816073,20.336459)
+        var imageBounds = L.latLngBounds(cornerUL, cornerLR);
+        //var imageNew = L.imageOverlay(imgPath, imageBounds).addTo(map);
+        /*
+        if (image == NULL){
+
+        }
+        else {
+            var imageNew = L.imageOverlay(imgPath, imageBounds).addTo(map);
+        }
+
+         */
+
+
+
+        // remove image layer if it already exists
+        if (map.hasLayer(image)) {
+            map.removeLayer(image);
+            console.log('Removed image')
+            imageNew = L.imageOverlay(imgPath, imageBounds).addTo(map);
+            console.log('Added new image')
+        }
+        else {
+            imageNew = L.imageOverlay(imgPath, imageBounds).addTo(map);
+            console.log('Added imageNew')
+
+        }
+
+        image = imageNew;
+    }
   </script>
 
 </body>
