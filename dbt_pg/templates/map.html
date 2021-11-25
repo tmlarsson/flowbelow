@@ -94,14 +94,7 @@
 
         <!--- A basic function to get the current value in the dropdown menu --->
         <script>
-            function getSelectedSensor(){
-                var selectedValue = document.getElementById("list").value;
-                return selectedValue
-            }
-            function getSelectedHeight(){
-                var selectedHeight = document.getElementById("listHeight").value;
-                return selectedHeight
-            }
+
 
         </script>
     </div>
@@ -111,6 +104,19 @@
 
 <!--- Script för den nedre kartan --->
 <script type = "text/javascript">
+
+    /* Function to get current value of sensor dropdown */
+    function getSelectedSensor(){
+        var selectedValue = document.getElementById("list").value;
+        return selectedValue
+    }
+
+    /* Function to get current value in height dropdown */
+    function getSelectedHeight(){
+        var selectedHeight = document.getElementById("listHeight").value;
+        return selectedHeight
+    }
+
     /* Function to create the initial height value table */
     function createHeightTable() {
         /* Get right div to append table */
