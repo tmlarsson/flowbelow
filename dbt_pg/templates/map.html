@@ -128,7 +128,7 @@
 
         {% for dataEntry in rasterObjects %}
             if ('{{dataEntry.id_tag}}' == sensorToLook) {
-                sensorMasl.push(Number('{{dataEntry.masl}}'));
+                sensorMasl.push('{{dataEntry.masl}}');
             }
         {% endfor %}
 
@@ -161,7 +161,7 @@
 
         {% for dataEntry in rasterObjects %}
             if ('{{dataEntry.id_tag}}' == sensorToLook) {
-                sensorMasl.push(Number('{{dataEntry.masl}}'));
+                sensorMasl.push('{{dataEntry.masl}}');
             }
         {% endfor %}
 
