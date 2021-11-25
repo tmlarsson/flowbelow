@@ -14,9 +14,6 @@ from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-# THe lines blow is for David, remove it if it complains
-GDAL_LIBRARY_PATH = r'C:\Users\oggu3\env\Lib\site-packages\osgeo\gdal303'
-GEOS_LIBRARY_PATH = r'C:\Users\oggu3\env\Lib\site-packages\osgeo\geos_c'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
