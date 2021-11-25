@@ -23,6 +23,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.16/p5.min.js" type="text/javascript"></script>
     <!--- för att göra grafen --->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.6.0/dist/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js" integrity="sha512-UXumZrZNiOwnTcZSHLOfcTs0aos2MzBWHXOHOuB0J/R44QB0dwY5JgfbvljXcklVf65Gc4El6RjZ+lnwd2az2g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-zoom/1.2.0/chartjs-plugin-zoom.min.js" integrity="sha512-TT0wAMqqtjXVzpc48sI0G84rBP+oTkBZPgeRYIOVRGUdwJsyS3WPipsNh///ay2LJ+onCM23tipnz6EvEy2/UA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <!--- en oklar --->
     <script src="https://unpkg.com/mappa-mundi@0.0.5/dist/mappa.js" type="text/javascript"></script>
     <!--- Loads proj4leaflet to use SWEREF99 --->
@@ -74,6 +76,8 @@
     <!---graf över vattennivån --->
     <div class="graf">
       <canvas id="Chart"></canvas>
+      <hr>
+      <button onclick="resetView()">Reset view</button>
     </div>
     <!--- Karta med sensorerna--->
     <div id="karta">
@@ -254,9 +258,29 @@
                     point: {
                         radius: 0
                     }
+                },
+                plugins: {
+                  zoom: {
+                    zoom: {
+                      mode: 'x',
+                      overScaleMode: 'x',
+                      drag: {
+                        enabled: true
+                      }
+                    },
+                    pan: {
+                      enabled:true,
+                      modifierKey: 'shift',
+                      mode: 'y'
+                    }
+
+                  }
                 }
             }
         });
+        function resetView(){
+          myChart.resetZoom();
+        }
         return myChart
     }
 
