@@ -132,14 +132,14 @@
             }
         {% endfor %}
 
-        //Create and append select list
+        /* Create and append select list */
         var selectList = document.createElement("select");
         selectList.setAttribute("id", "listHeight");
 
         selectList.addEventListener('change', loadImage);
         myDiv.appendChild(selectList);
 
-        //Create and append the options
+        /* Create and append the options */
         for (var i = 0; i < sensorMasl.length; i++) {
             var option = document.createElement("option");
             option.setAttribute("value", sensorMasl[i]);
@@ -165,7 +165,7 @@
             }
         {% endfor %}
 
-        //Create and append select list
+        /* Create and append select list */
         var selectList = document.getElementById("listHeight");
 
         /* Drop all current values from the list */
@@ -201,7 +201,7 @@
 
         /* Set path to image of simulation */
         var imgPath = 'static/Simulations/'+sensorToLook+'_waterlevel_'+simlationHeight+'.PNG'
-        console.log(imgPath)
+
         /* Set the image bounds of the added image */
         var cornerUL = L.latLng(63.840277,20.290099)
         var cornerLR = L.latLng(63.816073,20.336459)
@@ -225,7 +225,8 @@
         image = imageNew;
     }
 
-    /* Script för att uppdatera tidsgrafen */
+    /* Functions to update the timeseries data ----------------------------- */
+
     /* Function to create plot */
     function plotData() {
 
@@ -290,6 +291,7 @@
     /* Create the initial plot */
     myChart = plotData()
 
+    /* Making the initial map -------------------------------------- */
 
     /* Code to use proj4leaflet plugin.
      * Have not gotten it to work at all.
