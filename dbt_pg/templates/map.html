@@ -185,7 +185,7 @@
     /* Make the initial table */
     createHeightTable()
 
-    /* Functions used for map making ------------------------------------- */
+    /* Functions used for map making --------------------------------------- */
 
     /* Funciton to create base map */
     function makeMap(){
@@ -291,7 +291,7 @@
     /* Create the initial plot */
     myChart = plotData()
 
-    /* Making the initial map -------------------------------------- */
+    /* Making the initial map ---------------------------------------------- */
 
     /* Code to use proj4leaflet plugin.
      * Have not gotten it to work at all.
@@ -312,11 +312,15 @@ var utbredning = new L.Map('map', {
     /* Define global variables */
     var map;
     var image;
+
     /* Run function to make map */
     makeMap();
 
     /* Simulations are added when a value is selected
-    * in the dropdown menu on the page. */
+     * in the dropdown menu on the page. It is also
+     * updated when a different height is chosen in the
+     * height table.
+     */
 
   </script>
 
