@@ -87,19 +87,26 @@
     </div>
     <!--- Karta med sensorerna--->
     <div id="karta">
+        <!--- Shitty way to move the dropdown menu down as the chart.js does not respect boundaries --->
         <p></p>
         <p></p>
-        <select id=list onchange="updatePlot(); loadImage();">
+        <p></p>
+        <!--- Create a dropdown menu to select the sensor to look at. --->
+        <select id=list onchange="updatePlot(); updateHeightTable(); loadImage(); ">
             {% for sensorData in sensor_objects %}
                 <option value='{{ sensorData.id_tag }}'>{{sensorData.id_tag}} : {{ sensorData.placement }}</option>
             {% endfor %}
         </select>
 
+        <!--- A basic function to get the current value in the dropdown menu --->
         <script>
-            function getSelectedValue(){
+            function getSelectedSensor(){
                 var selectedValue = document.getElementById("list").value;
-                //console.log('Sensor from dropdown: '+selectedValue);
                 return selectedValue
+            }
+            function getSelectedHeight(){
+                var selectedHeight = document.getElementById("listHeight").value;
+                return selectedHeight
             }
 
         </script>
@@ -110,6 +117,113 @@
 
 <!--- Script för den nedre kartan --->
 <script type = "text/javascript">
+    /* Function to create the initial height value table */
+    function createHeightTable() {
+        /* Get right div to append table */
+        var myDiv = document.getElementById("karta");
+
+        /* Create array of value to add to table */
+        let sensorMasl = [];
+        var sensorToLook = getSelectedSensor();
+
+        {% for dataEntry in rasterObjects %}
+            if ('{{dataEntry.id_tag}}' == sensorToLook) {
+                sensorMasl.push(Number('{{dataEntry.masl}}'));
+            }
+        {% endfor %}
+
+        //Create and append select list
+        var selectList = document.createElement("select");
+        selectList.setAttribute("id", "listHeight");
+
+        selectList.addEventListener('change', loadImage);
+        myDiv.appendChild(selectList);
+
+        //Create and append the options
+        for (var i = 0; i < sensorMasl.length; i++) {
+            var option = document.createElement("option");
+            option.setAttribute("value", sensorMasl[i]);
+            option.text = sensorMasl[i]+' masl.';
+            selectList.appendChild(option);
+        }
+    }
+
+    /* Function to update the height value table when a different sensor
+     * is chosen in the sensor table
+     */
+    function updateHeightTable() {
+        /* Get right div to append table */
+        var myDiv = document.getElementById("karta");
+
+        /* Create array of value to add to table */
+        let sensorMasl = [];
+        var sensorToLook = getSelectedSensor();
+
+        {% for dataEntry in rasterObjects %}
+            if ('{{dataEntry.id_tag}}' == sensorToLook) {
+                sensorMasl.push(Number('{{dataEntry.masl}}'));
+            }
+        {% endfor %}
+
+        //Create and append select list
+        var selectList = document.getElementById("listHeight");
+
+        /* Drop all current values from the list */
+        var i, L = selectList.options.length - 1;
+        for(i = L; i >= 0; i--) {
+            selectList.remove(i);
+        }
+
+        /* Create the new heights and append to list */
+        for (var i = 0; i < sensorMasl.length; i++) {
+            var option = document.createElement("option");
+            option.setAttribute("value", sensorMasl[i]);
+            option.text = sensorMasl[i]+' masl.';
+            selectList.appendChild(option);
+        }
+    }
+    /* Make the initial table */
+    createHeightTable()
+
+    /* Functions used for map making ------------------------------------- */
+
+    /* Funciton to create base map */
+    function makeMap(){
+        map = L.map("utbredning").setView([63.834219,20.315930], 13);
+        makemap(map)
+    }
+
+    /* Function to update map after the sensor in dropdown is changed */
+    function loadImage() {
+        /* Get the chosen value in the dropdown menu */
+        var sensorToLook = getSelectedSensor();
+        var simlationHeight = getSelectedHeight();
+
+        /* Set path to image of simulation */
+        var imgPath = 'static/Simulations/'+sensorToLook+'_waterlevel_'+simlationHeight+'.PNG'
+        console.log(imgPath)
+        /* Set the image bounds of the added image */
+        var cornerUL = L.latLng(63.840277,20.290099)
+        var cornerLR = L.latLng(63.816073,20.336459)
+        var imageBounds = L.latLngBounds(cornerUL, cornerLR);
+
+        /* remove image layer if it already exists.
+         * Then add a new simulation based on the value
+         * in the sensor dropdown menu
+         */
+        if (map.hasLayer(image)) {
+            map.removeLayer(image);
+            console.log('Removed image and added new')
+            imageNew = L.imageOverlay(imgPath, imageBounds).addTo(map);
+        }
+        else {
+            imageNew = L.imageOverlay(imgPath, imageBounds).addTo(map);
+            console.log('Added imageNew')
+
+        }
+        /* Update the image variable to contain the newest simulation on map */
+        image = imageNew;
+    }
 
 </script>
 
@@ -117,12 +231,11 @@
 <!--- Script för att plotta tidserieinformation  --->
     <script onchange="plotData()">
 
-        function plotData()
-        {
+        function plotData() {
 
             let graph_data = [];
             let graph_times = [];
-            var sensorToLook = getSelectedValue();
+            var sensorToLook = getSelectedSensor();
             {% for dataEntry in timeData %}
             if ('{{dataEntry.id_tag}}' == sensorToLook) {
                 graph_data.push(Number('{{dataEntry.masl}}'));
@@ -162,7 +275,7 @@
         function  updatePlot(){
             let graph_data = [];
             let graph_times = [];
-            var sensorToLook = getSelectedValue();
+            var sensorToLook = getSelectedSensor();
             {% for dataEntry in timeData %}
                 if ('{{dataEntry.id_tag}}' == sensorToLook) {
                     graph_data.push(Number('{{dataEntry.masl}}'));
@@ -180,7 +293,9 @@
 
 <!--- Script för den vänstra kartan --->
   <script type = "text/javascript">
-
+      /* Code to use proj4leaflet plugin.
+       * Have not gotten it to work at all.
+       */
     /*var crs = new L.Proj.CRS('EPSG:3006','+proj=utm +zone=33 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs',
         {
             resolutions: [
@@ -203,42 +318,7 @@
     * in the dropdown menu on the page. */
 
 
-    /* Functions used for map making ------------------------------------- */
 
-    /* Funciton to create base map */
-    function makeMap(){
-        map = L.map("utbredning").setView([63.834219,20.315930], 13);
-        makemap(map)
-    }
-
-    /* Function to update map after the sensor in dropdown is changed */
-    function loadImage() {
-        var sensorToLook = getSelectedValue();
-        var imgPath = 'static/Simulations/'+sensorToLook+'_waterlevel_27.8.PNG'
-        console.log('imgPath: '+imgPath)
-
-        var cornerUL = L.latLng(63.840277,20.290099)
-        var cornerLR = L.latLng(63.816073,20.336459)
-        var imageBounds = L.latLngBounds(cornerUL, cornerLR);
-
-
-
-
-        // remove image layer if it already exists
-        if (map.hasLayer(image)) {
-            map.removeLayer(image);
-            console.log('Removed image')
-            imageNew = L.imageOverlay(imgPath, imageBounds).addTo(map);
-            console.log('Added new image')
-        }
-        else {
-            imageNew = L.imageOverlay(imgPath, imageBounds).addTo(map);
-            console.log('Added imageNew')
-
-        }
-
-        image = imageNew;
-    }
   </script>
 
 </body>
