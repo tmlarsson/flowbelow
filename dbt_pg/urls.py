@@ -6,4 +6,5 @@ urlpatterns = [
     path('timedata', views.plot_timedata, name='Timeseries'),
     path('view_timedata', views.view_timedata, name='Timeseries'),
     path('', views.map_homepage, name='Homepage'),
+    path('about', views.about, name='About us')
 ]

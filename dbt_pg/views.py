@@ -36,3 +36,6 @@ def map_homepage(request):
         'rasterObjects': R.objects.all()
     }
     return render(request, 'map.html', context)
+
+def about(request):
+    return render(request, 'about.html')
