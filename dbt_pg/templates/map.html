@@ -225,88 +225,87 @@
         image = imageNew;
     }
 
-</script>
+    /* Script för att uppdatera tidsgrafen */
+    /* Function to create plot */
+    function plotData() {
 
+        let graph_data = [];
+        let graph_times = [];
+        var sensorToLook = getSelectedSensor();
+        {% for dataEntry in timeData %}
+        if ('{{dataEntry.id_tag}}' == sensorToLook) {
+            graph_data.push(Number('{{dataEntry.masl}}'));
+            graph_times.push('{{dataEntry.time}}');
+        }
+        {% endfor %}
 
-<!--- Script för att plotta tidserieinformation  --->
-    <script onchange="plotData()">
+        const ctx = document.getElementById('Chart').getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: graph_times,
+                datasets: [{
+                    label: 'Data for sensor ' + sensorToLook,
+                    data: graph_data,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)'
 
-        function plotData() {
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)'
 
-            let graph_data = [];
-            let graph_times = [];
-            var sensorToLook = getSelectedSensor();
-            {% for dataEntry in timeData %}
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                elements: {
+                    point: {
+                        radius: 0
+                    }
+                }
+            }
+        });
+        return myChart
+    }
+
+    /* Function to update plot given a change in sensor dropdown */
+    function updatePlot(){
+        let graph_data = [];
+        let graph_times = [];
+        var sensorToLook = getSelectedSensor();
+        {% for dataEntry in timeData %}
             if ('{{dataEntry.id_tag}}' == sensorToLook) {
                 graph_data.push(Number('{{dataEntry.masl}}'));
                 graph_times.push('{{dataEntry.time}}');
             }
-            {% endfor %}
+        {% endfor %}
+        myChart.data.datasets[0].data = graph_data;
+        myChart.data.datasets[0].label = 'Data for sensor ' + sensorToLook;
+        myChart.data.labels = graph_times;
+        myChart.update();
+        console.log('Updated the plot')
+    }
 
-            const ctx = document.getElementById('Chart').getContext('2d');
-            const myChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: graph_times,
-                    datasets: [{
-                        label: 'Data for sensor ' + sensorToLook,
-                        data: graph_data,
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.2)'
+    /* Create the initial plot */
+    myChart = plotData()
 
-                        ],
-                        borderColor: [
-                            'rgba(255, 99, 132, 1)'
 
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    elements: {
-                        point: {
-                            radius: 0
-                        }
-                    }
-                }
-            });
-            return myChart
-        }
-        function  updatePlot(){
-            let graph_data = [];
-            let graph_times = [];
-            var sensorToLook = getSelectedSensor();
-            {% for dataEntry in timeData %}
-                if ('{{dataEntry.id_tag}}' == sensorToLook) {
-                    graph_data.push(Number('{{dataEntry.masl}}'));
-                    graph_times.push('{{dataEntry.time}}');
-                }
-            {% endfor %}
-            myChart.data.datasets[0].data = graph_data;
-            myChart.data.datasets[0].label = 'Data for sensor ' + sensorToLook;
-            myChart.data.labels = graph_times;
-            myChart.update();
-            console.log('Updated the plot')
-        }
-        myChart = plotData()
-    </script>
+    /* Code to use proj4leaflet plugin.
+     * Have not gotten it to work at all.
+     */
 
-<!--- Script för den vänstra kartan --->
-  <script type = "text/javascript">
-      /* Code to use proj4leaflet plugin.
-       * Have not gotten it to work at all.
-       */
     /*var crs = new L.Proj.CRS('EPSG:3006','+proj=utm +zone=33 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs',
-        {
-            resolutions: [
-                8192, 4096, 2048, 1024, 512, 256, 128
-            ],
-            origin: [0, 0]
-        })
-    var utbredning = new L.Map('map', {
-            crs: crs
-        });
-    */
+    {
+        resolutions: [
+            8192, 4096, 2048, 1024, 512, 256, 128
+        ],
+        origin: [0, 0]
+    })
+var utbredning = new L.Map('map', {
+        crs: crs
+    });
+*/
 
     /* Define global variables */
     var map;
@@ -316,8 +315,6 @@
 
     /* Simulations are added when a value is selected
     * in the dropdown menu on the page. */
-
-
 
   </script>
 
