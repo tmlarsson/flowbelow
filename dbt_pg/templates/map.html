@@ -77,13 +77,14 @@
     <div class="graf">
       <canvas id="Chart"></canvas>
       <hr>
-      <button onclick="resetView()">Reset view</button>
     </div>
     <!--- Karta med sensorerna--->
     <div id="karta">
         <!--- Shitty way to move the dropdown menu down as the chart.js does not respect boundaries --->
         <p></p>
         <p></p>
+        <p></p>
+        <button onclick="resetView()">Reset view</button>
         <p></p>
         <!--- Create a dropdown menu to select the sensor to look at. --->
         <select id=list onchange="updatePlot(); updateHeightTable(); loadImage(); ">
@@ -92,15 +93,11 @@
             {% endfor %}
         </select>
 
-        <!--- A basic function to get the current value in the dropdown menu --->
-        <script>
 
 
-        </script>
     </div>
-
   </div>
-  </div>
+</div>
 
 <!--- Script för den nedre kartan --->
 <script type = "text/javascript">
@@ -152,8 +149,6 @@
      * is chosen in the sensor table
      */
     function updateHeightTable() {
-        /* Get right div to append table */
-        var myDiv = document.getElementById("karta");
 
         /* Create array of value to add to table */
         let sensorMasl = [];
@@ -226,7 +221,9 @@
     }
 
     /* Functions to update the timeseries data ----------------------------- */
-
+    function resetView(){
+        myChart.resetZoom();
+    }
     /* Function to create plot */
     function plotData() {
 
@@ -241,7 +238,7 @@
         {% endfor %}
 
         const ctx = document.getElementById('Chart').getContext('2d');
-        const myChart = new Chart(ctx, {
+        myChart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: graph_times,
@@ -284,9 +281,7 @@
                 }
             }
         });
-        function resetView(){
-          myChart.resetZoom();
-        }
+
         return myChart
     }
 
@@ -332,6 +327,7 @@ var utbredning = new L.Map('map', {
     /* Define global variables */
     var map;
     var image;
+    var myChart;
 
     /* Run function to make map */
     makeMap();
