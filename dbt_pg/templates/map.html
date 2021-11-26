@@ -85,6 +85,7 @@
         <p></p>
         <p></p>
         <button onclick="resetView()">Reset view</button>
+        <p>Select data in plot by dragging mouse over the wanted time period. Reset view by clicking on the above button.</p>
         <p></p>
         <!--- Create a dropdown menu to select the sensor to look at. --->
         <select id=list onchange="updatePlot(); updateHeightTable(); loadImage(); ">
@@ -92,8 +93,6 @@
                 <option value='{{ sensorData.id_tag }}'>{{sensorData.id_tag}} : {{ sensorData.placement }}</option>
             {% endfor %}
         </select>
-
-
 
     </div>
   </div>
