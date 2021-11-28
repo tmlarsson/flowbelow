@@ -236,14 +236,16 @@
         }
         {% endfor %}
 
+        plotData = filterData(graph_times, graph_data)
+
         const ctx = document.getElementById('Chart').getContext('2d');
         myChart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: graph_times,
+                labels: plotData.time,
                 datasets: [{
                     label: 'Data for sensor ' + sensorToLook,
-                    data: graph_data,
+                    data: plotData.height,
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)'
 
@@ -295,11 +297,46 @@
                 graph_times.push('{{dataEntry.time}}');
             }
         {% endfor %}
-        myChart.data.datasets[0].data = graph_data;
+        plotData = filterData(graph_times, graph_data)
+        myChart.data.datasets[0].data = plotData.height;
         myChart.data.datasets[0].label = 'Data for sensor ' + sensorToLook;
-        myChart.data.labels = graph_times;
+        myChart.data.labels = plotData.time;
         myChart.update();
         console.log('Updated the plot')
+    }
+
+
+    /* Function for filtering plotdata */
+    function filterData(time, height){
+
+
+        hTol = 0.1;
+        i = 0;
+
+        while( i < height.length-2 ) {
+            currentH = height[i];
+            nextH = height[i+1];
+            deltaH = nextH-currentH;
+
+            if(Math.abs(deltaH)>hTol){
+
+                if(Math.abs(currentH-height[i+2])>hTol){
+                    height[i+1] -= deltaH;
+                    height[i+2] -= deltaH;
+                    i++;
+                } else {
+                    height.splice(i+1,1);
+                    time.splice(i+1,1);
+                }
+            } else {
+                i++;
+            }
+        }
+
+        return {
+        time: time,
+        height: height
+        };
     }
 
     /* Create the initial plot */
