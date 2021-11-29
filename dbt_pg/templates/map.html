@@ -306,6 +306,14 @@
     }
 
 
+    /* Support function for shifting data in filterData */
+    function shiftRemainingData(height, i, deltaH){
+        for(let j = i+1; j<height.lenght; j++){
+            height[j] -= deltaH;
+        }
+        return height;
+    }
+
     /* Function for filtering plotdata */
     function filterData(time, height){
 
@@ -323,7 +331,6 @@
                 if(Math.abs(currentH-height[i+2])>hTol){
                     height[i+1] -= deltaH;
                     height[i+2] -= deltaH;
-                    i++;
                 } else {
                     height.splice(i+1,1);
                     time.splice(i+1,1);
