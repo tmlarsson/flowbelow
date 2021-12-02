@@ -1,0 +1,43 @@
+h1{
+  font-size: 3vW;
+}
+
+.all{
+  width: 100%;
+  height: 100vh;
+}
+
+.heading{
+  width: 100%;
+  height: 8vh;
+}
+
+.logga{
+  width:20%;
+  /*background-color: red;*/
+  float: left;
+  margin-right: 5%;
+
+}
+.rubrik{
+  /*background-color: green;*/
+  width: 60%;
+}
+
+ #graph{
+ }
+.graf{
+  width: 90%;
+  height: 20vh;
+  float:left;
+}
+
+.nothead{
+  width: 100%;
+  height: 92vh;
+}
+#utbredning{
+  width: 90%;
+  height: 80vh;
+  float:left;
+}

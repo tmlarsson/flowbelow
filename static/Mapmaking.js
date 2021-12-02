@@ -9,7 +9,9 @@
     zoomOffset: -1
   }).addTo(mymap);
 
-  /* Loop to add all installed sensors to the current map */
+  /* Loop to add all installed sensors to the current map
+   * Code has to be moved to .html so the queryset can be added
+   */
 
   /*
   var x_cord;
