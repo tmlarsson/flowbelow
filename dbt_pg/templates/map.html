@@ -116,21 +116,19 @@
 
 <!--- Script för den nedre kartan --->
 <script type = "text/javascript">
-let rSlider;
 
-function setup() {
-// create slider
-rSlider = createSlider(0, 255, 100);
-rSlider.position(100, 1000);
-let r = rSlider.value();
+    let rSlider;
 
-}
+    function setup() {
+        // create slider
+        rSlider = createSlider(0, 255, 100);
+        rSlider.position(100, 1000);
+        let r = rSlider.value();
+    }
 
-function draw() {
-let r = rSlider.value();
-
-
-}
+    function draw() {
+        let r = rSlider.value();
+    }
 
     /* Function to create the height value table when a different sensor
      * is chosen in the sensor table
@@ -227,7 +225,6 @@ let r = rSlider.value();
                     ],
                     borderColor: [
                         'rgba(255, 99, 132, 1)'
-
                     ],
                     borderWidth: 1
                 }]
@@ -332,6 +329,9 @@ let r = rSlider.value();
 
     /* Create the initial plot */
     myChart = plotData()
+
+    /* Create the initial height table */
+    createHeightTable()
 
     /* Making the initial map ---------------------------------------------- */
 
