@@ -1,33 +1,8 @@
 from django.shortcuts import render
-from django.http import HttpResponse
 from .models import Sensor as S
 from .models import Sensor_time_value as ST
 from .models import raster_data as R
-import json
-from django.core.serializers.json import DjangoJSONEncoder
-
-
-def sensor_list_view(request):
-    sensor_objects = S.objects.all()
-    context = {
-        'sensor_objects': sensor_objects
-    }
-    return render(request, 'list_sensors.html', context)
-
-def plot_timedata(request):
-    context = {
-        'timeData': ST.objects.all().filter(id_tag='A81758FFFE045989')
-    }
-    return render(request, 'timedata.html', context)
-
-
-def view_timedata(request):
-    timedata = ST.objects.all().filter(id_tag='A81758FFFE045989')
-    context = {
-        'timeData': timedata
-    }
-    return render(request, 'list_timedata.html', context)
-
+import datetime
 
 def map_homepage(request):
     context = {
@@ -39,3 +14,19 @@ def map_homepage(request):
 
 def about(request):
     return render(request, 'about.html')
+
+def map_simulation(request):
+    context = {
+        'timeData': ST.objects.all(),
+        'sensor_objects': S.objects.all(),
+        'rasterObjects': R.objects.all(),
+        'timesUsed': ST.objects.values('time').distinct().order_by('time')
+    }
+    return render(request, 'map_sim.html', context)
+
+def current(request):
+    context = {
+        'timeData': ST.objects.all(),
+        'sensor_objects': S.objects.all(),
+    }
+    return render(request, 'current.html', context)

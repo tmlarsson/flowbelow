@@ -20,7 +20,7 @@
     {% load static %}
     <script src="{% static 'Mapmaking.js' %}"></script>
     <!--- p5 --->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.16/p5.min.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js" integrity="sha512-N4kV7GkNv7QR7RX9YF/olywyIgIwNvfEe2nZtfyj73HdjCUkAfOBDbcuJ/cTaN04JKRnw1YG1wnUyNKMsNgg3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <!--- för att göra grafen --->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.6.0/dist/chart.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js" integrity="sha512-UXumZrZNiOwnTcZSHLOfcTs0aos2MzBWHXOHOuB0J/R44QB0dwY5JgfbvljXcklVf65Gc4El6RjZ+lnwd2az2g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -33,6 +33,11 @@
     <script src="{% static 'proj4.js' %}"></script>
     {% load static %}
     <script src="{% static 'proj4leaflet.js' %}"></script>
+    <!--- Load external functions from static --->
+    {% load static %}
+    <script src="{% static 'tableFunctions.js' %}"></script>
+    {% load static %}
+    <script src="{% static 'mapFunctions.js' %}"></script>
 
 </head>
 
@@ -62,6 +67,16 @@
               </a>
           </li>
           <li class="nav-item active ">
+              <a href="/simulations" class="nav-link">
+                  Simuleringar
+              </a>
+          </li>
+          <li class="nav-item active ">
+              <a href="/current" class="nav-link">
+                  Tidsseriedata
+              </a>
+          </li>
+          <li class="nav-item active ">
               <a href="/admin" class="nav-link">
                   Logga in
               </a>
@@ -69,6 +84,7 @@
       </ul>
   </div>
   </div>
+
   <div class="nothead">
     <!--- karta över utbredning--->
     <div id="utbredning"></div>
@@ -100,20 +116,25 @@
 
 <!--- Script för den nedre kartan --->
 <script type = "text/javascript">
+let rSlider;
 
-    /* Function to get current value of sensor dropdown */
-    function getSelectedSensor(){
-        var selectedValue = document.getElementById("list").value;
-        return selectedValue
-    }
+function setup() {
+// create slider
+rSlider = createSlider(0, 255, 100);
+rSlider.position(100, 1000);
+let r = rSlider.value();
 
-    /* Function to get current value in height dropdown */
-    function getSelectedHeight(){
-        var selectedHeight = document.getElementById("listHeight").value;
-        return selectedHeight
-    }
+}
 
-    /* Function to create the initial height value table */
+function draw() {
+let r = rSlider.value();
+
+
+}
+
+    /* Function to create the height value table when a different sensor
+     * is chosen in the sensor table
+     */
     function createHeightTable() {
         /* Get right div to append table */
         var myDiv = document.getElementById("karta");
@@ -176,53 +197,7 @@
             selectList.appendChild(option);
         }
     }
-    /* Make the initial table */
-    createHeightTable()
 
-    /* Functions used for map making --------------------------------------- */
-
-    /* Funciton to create base map */
-    function makeMap(){
-        map = L.map("utbredning").setView([63.834219,20.315930], 13);
-        makemap(map)
-    }
-
-    /* Function to update map after the sensor in dropdown is changed */
-    function loadImage() {
-        /* Get the chosen value in the dropdown menu */
-        var sensorToLook = getSelectedSensor();
-        var simulationHeight = getSelectedHeight();
-
-        /* Set path to image of simulation */
-        var imgPath = 'static/Simulations/'+sensorToLook+'_waterlevel_'+simlationHeight+'.PNG'
-
-        /* Set the image bounds of the added image */
-        var cornerUL = L.latLng(63.840277,20.290099)
-        var cornerLR = L.latLng(63.816073,20.336459)
-        var imageBounds = L.latLngBounds(cornerUL, cornerLR);
-
-        /* remove image layer if it already exists.
-         * Then add a new simulation based on the value
-         * in the sensor dropdown menu
-         */
-        if (map.hasLayer(image)) {
-            map.removeLayer(image);
-            console.log('Removed image and added new')
-            imageNew = L.imageOverlay(imgPath, imageBounds).addTo(map);
-        }
-        else {
-            imageNew = L.imageOverlay(imgPath, imageBounds).addTo(map);
-            console.log('Added imageNew')
-
-        }
-        /* Update the image variable to contain the newest simulation on map */
-        image = imageNew;
-    }
-
-    /* Functions to update the timeseries data ----------------------------- */
-    function resetView(){
-        myChart.resetZoom();
-    }
     /* Function to create plot */
     function plotData() {
 
