@@ -191,7 +191,7 @@
     function loadImage() {
         /* Get the chosen value in the dropdown menu */
         var sensorToLook = getSelectedSensor();
-        var simlationHeight = getSelectedHeight();
+        var simulationHeight = getSelectedHeight();
 
         /* Set path to image of simulation */
         var imgPath = 'static/Simulations/'+sensorToLook+'_waterlevel_'+simlationHeight+'.PNG'
@@ -314,6 +314,20 @@
         return height;
     }
 
+    /* Support function for checking data in filterData */
+    function checkShiftInData(height, i, currentH, hTol, deltaH, dj){
+
+        switchedData = 1;
+        for(let j = i+1; j<i+dj+1; j++){
+
+            newDeltaH = height[j]-currentH;
+            if(Math.abs(newDeltaH)<hTol || Math.sign(deltaH)!=Math.sign(newDeltaH)){
+                switchedData = 0;
+            }
+        }
+        return switchedData;
+    }
+
     /* Function for filtering plotdata */
     function filterData(time, height){
 
@@ -325,19 +339,14 @@
             currentH = height[i];
             nextH = height[i+1];
             deltaH = nextH-currentH;
-
-            if(Math.abs(deltaH)>hTol){
-
-                if(Math.abs(currentH-height[i+2])>hTol){
-                    height[i+1] -= deltaH;
-                    height[i+2] -= deltaH;
+            if(Math.abs(deltaH)>hTol)
+                if(checkShiftInData(height, i, currentH, hTol, deltaH, 10)){
+                    shiftRemainingData(height, i, deltaH);
+                    i++;
                 } else {
-                    height.splice(i+1,1);
-                    time.splice(i+1,1);
+                    height[i+1] -= deltaH
                 }
-            } else {
-                i++;
-            }
+            i++;
         }
 
         return {
