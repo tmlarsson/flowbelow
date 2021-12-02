@@ -1,10 +1,8 @@
 from django.shortcuts import render
-from django.http import HttpResponse
 from .models import Sensor as S
 from .models import Sensor_time_value as ST
 from .models import raster_data as R
-import json
-from django.core.serializers.json import DjangoJSONEncoder
+import datetime
 
 def map_homepage(request):
     context = {
@@ -21,7 +19,8 @@ def map_simulation(request):
     context = {
         'timeData': ST.objects.all(),
         'sensor_objects': S.objects.all(),
-        'rasterObjects': R.objects.all()
+        'rasterObjects': R.objects.all(),
+        'timesUsed': ST.objects.values('time').distinct().order_by('time')
     }
     return render(request, 'map_sim.html', context)
 

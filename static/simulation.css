@@ -24,12 +24,12 @@ h1{
   width: 60%;
 }
 
- #graph{
+ #graf{
  }
 .graf{
-  width: 90%;
-  height: 20vh;
-  float:left;
+  width: 50%;
+  height: 92vh;
+  float:right;
 }
 
 .nothead{
@@ -37,7 +37,7 @@ h1{
   height: 92vh;
 }
 #utbredning{
-  width: 90%;
-  height: 80vh;
+  width: 50%;
+  height: 92vh;
   float:left;
 }

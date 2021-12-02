@@ -33,10 +33,7 @@
     <script src="{% static 'proj4.js' %}"></script>
     {% load static %}
     <script src="{% static 'proj4leaflet.js' %}"></script>
-    {% load static %}
-    <script src="{% static 'tableFunctions.js' %}"></script>
-    {% load static %}
-    <script src="{% static 'mapFunctions.js' %}"></script>
+    <!--- Load external functions from static --->
 
 </head>
 
@@ -89,27 +86,7 @@
     <div id="utbredning"></div>
 
     <!---graf över vattennivån --->
-    <div class="graf">
-      <canvas id="Chart"></canvas>
-      <hr>
-    </div>
-    <!--- Karta med sensorerna--->
-    <div id="karta">
-        <!--- Shitty way to move the dropdown menu down as the chart.js does not respect boundaries --->
-        <p></p>
-        <p></p>
-        <p></p>
-        <button onclick="resetView()">Reset view</button>
-        <p>Select data in plot by dragging mouse over the wanted time period. Reset view by clicking on the above button.</p>
-        <p></p>
-        <!--- Create a dropdown menu to select the sensor to look at. --->
-        <select id=list onchange="updatePlot(); updateHeightTable(); loadImage(); ">
-            {% for sensorData in sensor_objects %}
-                <option value='{{ sensorData.id_tag }}'>{{sensorData.id_tag}} : {{ sensorData.placement }}</option>
-            {% endfor %}
-        </select>
-
-    </div>
+    <div class="graf" id="graf"></div>
   </div>
 </div>
 
@@ -119,177 +96,131 @@
     /* Function to create the height value table when a different sensor
      * is chosen in the sensor table
      */
-    function createHeightTable() {
+    function createTimeTable() {
         /* Get right div to append table */
-        var myDiv = document.getElementById("karta");
+        var myDiv = document.getElementById("graf");
 
         /* Create array of value to add to table */
-        let sensorMasl = [];
-        var sensorToLook = getSelectedSensor();
+        let timesToLook = [];
 
-        {% for dataEntry in rasterObjects %}
-            if ('{{dataEntry.id_tag}}' == sensorToLook) {
-                sensorMasl.push('{{dataEntry.masl}}');
-            }
+        {% for time in timesUsed %}
+            timesToLook.push('{{time.time}}');
         {% endfor %}
 
         /* Create and append select list */
         var selectList = document.createElement("select");
-        selectList.setAttribute("id", "listHeight");
+        selectList.setAttribute("id", "listTime");
 
         selectList.addEventListener('change', loadImage);
         myDiv.appendChild(selectList);
 
         /* Create and append the options */
-        for (var i = 0; i < sensorMasl.length; i++) {
+        for (var i = 0; i < timesToLook.length; i++) {
             var option = document.createElement("option");
-            option.setAttribute("value", sensorMasl[i]);
-            option.text = sensorMasl[i]+' masl.';
+            option.setAttribute("value", timesToLook[i]);
+            option.text = timesToLook[i];
             selectList.appendChild(option);
         }
     }
 
-    /* Function to update the height value table when a different sensor
-     * is chosen in the sensor table
-     */
-    function updateHeightTable() {
+    /* Function to get current value in time dropdown */
 
-        /* Create array of value to add to table */
-        let sensorMasl = [];
-        var sensorToLook = getSelectedSensor();
+    function getSelectedTime(){
+        var selectedTime = document.getElementById("listTime").value;
+        return selectedTime
+    }
 
-        {% for dataEntry in rasterObjects %}
-            if ('{{dataEntry.id_tag}}' == sensorToLook) {
-                sensorMasl.push('{{dataEntry.masl}}');
+
+    /* Functions used for map making --------------------------------------- */
+
+    /* Funciton to create base map */
+    function makeMap(){
+        map = L.map("utbredning").setView([63.834219,20.315930], 13);
+        makemap(map)
+    }
+
+    /* Function to get measured masl from sensor at a given time */
+    function getHeightFromTime(simulationTime){
+
+        var heightUsed = [];
+        var sensors = [];
+        let tmp;
+        {% for sensor in timeData %}
+            if(simulationTime == '{{sensor.time}}') {
+                console.log('SimulationTime: '+simulationTime)
+
+                tmp = '{{sensor.masl}}';
+                tmp = parseFloat(tmp)+parseFloat("0.1");
+                tmp = tmp.toFixed(1);
+                console.log(tmp)
+                sensors.push('{{sensor.id_tag}}')
+                heightUsed.push(tmp);
             }
         {% endfor %}
 
-        /* Create and append select list */
-        var selectList = document.getElementById("listHeight");
-
-        /* Drop all current values from the list */
-        var i, L = selectList.options.length - 1;
-        for(i = L; i >= 0; i--) {
-            selectList.remove(i);
-        }
-
-        /* Create the new heights and append to list */
-        for (var i = 0; i < sensorMasl.length; i++) {
-            var option = document.createElement("option");
-            option.setAttribute("value", sensorMasl[i]);
-            option.text = sensorMasl[i]+' masl.';
-            selectList.appendChild(option);
+        return {
+            heightUsed,
+            sensors
         }
     }
 
-    /* Function to create plot */
-    function plotData() {
+    /* Function to update map after the sensor in dropdown is changed */
+    function loadImage() {
+        /* Get the chosen value in the dropdown menu */
+        var simulationTime = getSelectedTime();
+        var {heightUsed, sensors} = getHeightFromTime(simulationTime);
+        console.log('HeightUsed: {'+heightUsed+'}')
+        console.log('Sensors: {'+sensors+'}')
 
-        let graph_data = [];
-        let graph_times = [];
-        var sensorToLook = getSelectedSensor();
-        {% for dataEntry in timeData %}
-        if ('{{dataEntry.id_tag}}' == sensorToLook) {
-            graph_data.push(Number('{{dataEntry.masl}}'));
-            graph_times.push('{{dataEntry.time}}');
-        }
-        {% endfor %}
+        /* Define variables */
+        var imgPath;
 
-        const ctx = document.getElementById('Chart').getContext('2d');
-        myChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: graph_times,
-                datasets: [{
-                    label: 'Data for sensor ' + sensorToLook,
-                    data: graph_data,
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)'
+        /* Set the image bounds of the added image */
+        var cornerUL = L.latLng(63.840277,20.290099)
+        var cornerLR = L.latLng(63.816073,20.336459)
+        var imageBounds = L.latLngBounds(cornerUL, cornerLR);
 
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)'
+        for (var i = 0; i < sensors.length; i++) {
 
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                elements: {
-                    point: {
-                        radius: 0
-                    }
-                },
-                plugins: {
-                  zoom: {
-                    zoom: {
-                      mode: 'x',
-                      overScaleMode: 'x',
-                      drag: {
-                        enabled: true
-                      }
-                    },
-                    pan: {
-                      enabled:true,
-                      modifierKey: 'shift',
-                      mode: 'y'
-                    }
 
-                  }
-                }
+            /* Set path to image of simulation */
+            console.log('Sensors in img loop: '+sensors[i])
+            imgPath = 'static/Simulations/'+sensors[i]+'_waterlevel_'+heightUsed[i]+'.PNG'
+            console.log('IMG path in loop : '+imgPath)
+
+            /* remove image layer if it already exists.
+             * Then add a new simulation based on the value
+             * in the sensor dropdown menu
+             */
+            if (map.hasLayer(image[i])) {
+                map.removeLayer(image[i]);
+                console.log('Removed image and added new')
+                imageNew = L.imageOverlay(imgPath, imageBounds).addTo(map);
             }
-        });
+            else {
+                imageNew = L.imageOverlay(imgPath, imageBounds).addTo(map);
+                console.log('Added imageNew')
 
-        return myChart
-    }
-
-    /* Function to update plot given a change in sensor dropdown */
-    function updatePlot(){
-        let graph_data = [];
-        let graph_times = [];
-        var sensorToLook = getSelectedSensor();
-        {% for dataEntry in timeData %}
-            if ('{{dataEntry.id_tag}}' == sensorToLook) {
-                graph_data.push(Number('{{dataEntry.masl}}'));
-                graph_times.push('{{dataEntry.time}}');
             }
-        {% endfor %}
-        myChart.data.datasets[0].data = graph_data;
-        myChart.data.datasets[0].label = 'Data for sensor ' + sensorToLook;
-        myChart.data.labels = graph_times;
-        myChart.update();
-        console.log('Updated the plot')
+            /* Update the image variable to contain the newest simulation on map */
+            image[i] = imageNew;
+        }
+
     }
+
 
     /* Using the above defined functions to create site--------------------- */
+    /* --------------------------------------------------------------------- */
+    /* --------------------------------------------------------------------- */
+    /* --------------------------------------------------------------------- */
+    /* --------------------------------------------------------------------- */
 
-    /* Make the initial table */
-    createHeightTable()
-
-    /* Create the initial plot */
-    myChart = plotData()
-
-    /* Making the initial map ---------------------------------------------- */
-
-    /* Code to use proj4leaflet plugin.
-     * Have not gotten it to work at all.
-     */
-
-    /*var crs = new L.Proj.CRS('EPSG:3006','+proj=utm +zone=33 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs',
-    {
-        resolutions: [
-            8192, 4096, 2048, 1024, 512, 256, 128
-        ],
-        origin: [0, 0]
-    })
-var utbredning = new L.Map('map', {
-        crs: crs
-    });
-*/
+    /* Make the initial table ---------------------------------------------- */
+    createTimeTable()
 
     /* Define global variables */
     var map;
-    var image;
+    var image = [];
     var myChart;
 
     /* Run function to make map */
