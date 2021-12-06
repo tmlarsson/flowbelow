@@ -46,11 +46,13 @@ function makeMap(){
 }
 
 /* Function to update map after the sensor in dropdown is changed */
-function loadImage() {
+function loadImage(height) {
     /* Get the chosen value in the dropdown menu */
     var sensorToLook = getSelectedSensor();
-    var simlationHeight = getSelectedHeight();
-
+    //var simlationHeight = getSelectedHeight();
+    var tmp = parseFloat(height);
+    tmp = tmp + parseFloat("0.1");
+    var simlationHeight = tmp.toFixed(1)
     /* Set path to image of simulation */
     var imgPath = 'static/Simulations/'+sensorToLook+'_waterlevel_'+simlationHeight+'.PNG'
 
@@ -77,10 +79,7 @@ function loadImage() {
     image = imageNew;
 }
 
-/* Functions to update the timeseries data ----------------------------- */
-function resetView(){
-    myChart.resetZoom();
-}
+
 
 
 
@@ -136,6 +135,7 @@ function makeMap2(){
     var marker6= L.marker([63.8360593,20.3163476]).addTo(map);
 
 }
+
 
 
 

@@ -42,6 +42,10 @@
     <script src="{% static 'proj4leaflet.js' %}"></script>
     <!--- Load external functions from static --->
 
+    <!--- Load plugin for vertical crosshair to chart js --->
+    {% load static %}
+    <script src="{% static 'chartjs-plugin-crosshair.min.js' %}"></script>
+
 </head>
 
 <body>
@@ -93,7 +97,10 @@
     <div id="utbredning"></div>
 
     <!---graf över vattennivån --->
-    <div class="graf" id="graf"></div>
+    <div class="graf" id="graf">
+        <canvas id="Chart"></canvas>
+        <hr>
+    </div>
   </div>
 </div>
 
@@ -219,9 +226,11 @@
     }
 
     /* Function to update map after the sensor in dropdown is changed */
-    function loadImage() {
+    function loadImage(simulationTime2) {
         /* Get the chosen value in the dropdown menu */
-        var simulationTime = getSelectedTime();
+        //var simulationTime = getSelectedTime();
+        var simulationTime = simulationTime2;
+        console.log('time used: '+simulationTime);
         var {heightUsed, sensors} = getHeightFromTime(simulationTime);
         console.log('HeightUsed: {'+heightUsed+'}')
         console.log('Sensors: {'+sensors+'}')
@@ -262,6 +271,171 @@
 
     }
 
+    /* Function to create plot */
+    function plotData() {
+
+        let graph_data = [];
+        let graph_times = [];
+        var sensorToLook = 'A81758FFFE04CDD8'; // getSelectedSensor();
+        {% for dataEntry in timeData %}
+        if ('{{dataEntry.id_tag}}' == sensorToLook) {
+            graph_data.push(Number('{{dataEntry.masl}}'));
+            graph_times.push('{{dataEntry.time}}');
+        }
+        {% endfor %}
+
+        var plotData2 = filterData(graph_times, graph_data)
+
+        const ctx = document.getElementById('Chart').getContext('2d');
+        myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: plotData2.time,
+                datasets: [{
+                    label: 'Data for sensor ' + sensorToLook,
+                    data: plotData2.height,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)'
+
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                elements: {
+                    point: {
+                        radius: 0
+                    }
+                },
+                interaction: {
+                    mode: 'x',
+                },
+                plugins: {
+                    tooltip: {
+                        mode: 'interpolate',
+                        intersect: false,
+                        position: 'average',
+                        callbacks: {
+                            title: function(item, everything){
+                                let value = item[0].raw;
+                                let time = item[0].label;
+                                loadImage(time)
+                                console.log(item)
+                                let title = value+' möh.'
+                              return title;
+                            },
+                            label: function(item, everything){
+                            },
+                        },
+                    },
+                    crosshair: {
+                        line: {
+                          color: '#F66',  // crosshair line color
+                          width: 5,        // crosshair line width
+                        },
+                        sync: {
+                          enabled: false,            // enable trace line syncing with other charts
+                          group: 1,                 // chart group
+                          suppressTooltips: true,   // suppress tooltips when showing a synced tracer
+                        },
+                        zoom: {
+                          enabled: true,                                      // enable zooming
+                          zoomboxBackgroundColor: 'rgba(66,133,244,0.2)',     // background color of zoom box
+                          zoomboxBorderColor: '#48F',                         // border color of zoom box
+                          zoomButtonText: 'Reset Zoom',                       // reset zoom button text
+                          zoomButtonClass: 'reset-zoom',                      // reset zoom button class
+                        },
+                        callbacks: {
+                          beforeZoom: () => function(start, end) {                  // called before zoom, return false to prevent zoom
+                            console.log("beforeZoom has run")
+                              return true;
+                          },
+                          afterZoom: () => function(start, end) {// called after zoom
+                            console.log("afterZoom has run")
+                          }
+                        }
+                    },
+                },
+            },
+        });
+    }
+
+    /* Function to update plot given a change in sensor dropdown */
+    function updatePlot(){
+        let graph_data = [];
+        let graph_times = [];
+        var sensorToLook = getSelectedSensor();
+        {% for dataEntry in timeData %}
+            if ('{{dataEntry.id_tag}}' == sensorToLook) {
+                graph_data.push(Number('{{dataEntry.masl}}'));
+                graph_times.push('{{dataEntry.time}}');
+            }
+        {% endfor %}
+        plotData = filterData(graph_times, graph_data)
+        myChart.data.datasets[0].data = plotData.height;
+        myChart.data.datasets[0].label = 'Data for sensor ' + sensorToLook;
+        myChart.data.labels = plotData.time;
+        myChart.update();
+        console.log('Updated the plot')
+    }
+
+    /* Functions to update the timeseries data ----------------------------- */
+    function resetView(){
+        myChart.resetZoom();
+    }
+
+    /* Support function for shifting data in filterData */
+    function shiftRemainingData(height, i, deltaH){
+        for(let j = i+1; j<height.lenght; j++){
+            height[j] -= deltaH;
+        }
+        return height;
+    }
+
+    /* Support function for checking data in filterData */
+    function checkShiftInData(height, i, currentH, hTol, deltaH, dj){
+
+        switchedData = 1;
+        for(let j = i+1; j<i+dj+1; j++){
+
+            newDeltaH = height[j]-currentH;
+            if(Math.abs(newDeltaH)<hTol || Math.sign(deltaH)!=Math.sign(newDeltaH)){
+                switchedData = 0;
+            }
+        }
+        return switchedData;
+    }
+
+    /* Function for filtering plotdata */
+    function filterData(time, height){
+
+
+        hTol = 0.1;
+        i = 0;
+
+        while( i < height.length-2 ) {
+            currentH = height[i];
+            nextH = height[i+1];
+            deltaH = nextH-currentH;
+            if(Math.abs(deltaH)>hTol)
+                if(checkShiftInData(height, i, currentH, hTol, deltaH, 10)){
+                    shiftRemainingData(height, i, deltaH);
+                    i++;
+                } else {
+                    height[i+1] -= deltaH
+                }
+            i++;
+        }
+
+        return {
+        time: time,
+        height: height
+        };
+    }
+
     /* --------------------------------------------------------------------- */
     /* --------------------------------------------------------------------- */
     /* --------------------------------------------------------------------- */
@@ -278,6 +452,9 @@
 
     /* Run function to make map */
     makeMap();
+
+    /* Create the initial plot */
+    plotData()
 
   </script>
 
