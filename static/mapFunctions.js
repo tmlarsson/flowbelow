@@ -49,10 +49,24 @@ function makeMap(){
 function loadImage(height) {
     /* Get the chosen value in the dropdown menu */
     var sensorToLook = getSelectedSensor();
-    //var simlationHeight = getSelectedHeight();
-    var tmp = parseFloat(height);
-    tmp = tmp + parseFloat("0.1");
-    var simlationHeight = tmp.toFixed(1)
+    var simlationHeight;
+
+    /* If height is object event, i.e. when user choses
+     * value of simulation via dropdown, then
+     * getSelectedHeight() is run. Otherwise value from
+     * plot is taken.
+     */
+    if (height.target){
+        console.log('Height is null: '+height)
+        simlationHeight = getSelectedHeight();
+    }
+    else {
+        var tmp = parseFloat(height);
+        tmp = tmp + parseFloat("0.1");
+        simlationHeight = tmp.toFixed(1)
+    }
+
+
     /* Set path to image of simulation */
     var imgPath = 'static/Simulations/'+sensorToLook+'_waterlevel_'+simlationHeight+'.PNG'
 

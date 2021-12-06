@@ -144,7 +144,6 @@
         return selectedTime
     }
 
-
     /* Functions used for map making --------------------------------------- */
 
     /* Funciton to create base map */
@@ -208,12 +207,11 @@
         let tmp;
         {% for sensor in timeData %}
             if(simulationTime == '{{sensor.time}}') {
-                console.log('SimulationTime: '+simulationTime)
 
                 tmp = '{{sensor.masl}}';
                 tmp = parseFloat(tmp)+parseFloat("0.1");
                 tmp = tmp.toFixed(1);
-                console.log(tmp)
+
                 sensors.push('{{sensor.id_tag}}')
                 heightUsed.push(tmp);
             }
@@ -227,13 +225,23 @@
 
     /* Function to update map after the sensor in dropdown is changed */
     function loadImage(simulationTime2) {
+
         /* Get the chosen value in the dropdown menu */
-        //var simulationTime = getSelectedTime();
-        var simulationTime = simulationTime2;
-        console.log('time used: '+simulationTime);
+        var simulationTime;
+
+        /* If height is object event, i.e. when user choses
+         * value of simulation via dropdown, then
+         * getSelectedTime() is run. Otherwise value from
+         * plot is taken.
+         */
+        if (simulationTime2.target){
+            simulationTime = getSelectedTime();
+        }
+        else {
+            simulationTime = simulationTime2;
+        }
+
         var {heightUsed, sensors} = getHeightFromTime(simulationTime);
-        console.log('HeightUsed: {'+heightUsed+'}')
-        console.log('Sensors: {'+sensors+'}')
 
         /* Define variables */
         var imgPath;
@@ -247,9 +255,7 @@
 
 
             /* Set path to image of simulation */
-            console.log('Sensors in img loop: '+sensors[i])
             imgPath = 'static/Simulations/'+sensors[i]+'_waterlevel_'+heightUsed[i]+'.PNG'
-            console.log('IMG path in loop : '+imgPath)
 
             /* remove image layer if it already exists.
              * Then add a new simulation based on the value
@@ -322,8 +328,12 @@
                             title: function(item, everything){
                                 let value = item[0].raw;
                                 let time = item[0].label;
+                                /* Calls loadImage with time taken from
+                                 * hover over the graph. This is to change
+                                 * simulations based of the time value of the
+                                 * hovering in the graph.
+                                 */
                                 loadImage(time)
-                                console.log(item)
                                 let title = value+' möh.'
                               return title;
                             },
@@ -363,7 +373,8 @@
         });
     }
 
-    /* Function to update plot given a change in sensor dropdown */
+    /* Function to update plot given a change in sensor dropdown.
+     * Not currently used. */
     function updatePlot(){
         let graph_data = [];
         let graph_times = [];
@@ -380,11 +391,6 @@
         myChart.data.labels = plotData.time;
         myChart.update();
         console.log('Updated the plot')
-    }
-
-    /* Functions to update the timeseries data ----------------------------- */
-    function resetView(){
-        myChart.resetZoom();
     }
 
     /* Support function for shifting data in filterData */
