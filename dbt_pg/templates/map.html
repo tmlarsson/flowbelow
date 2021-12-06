@@ -92,11 +92,6 @@
               </a>
           </li>
           <li class="nav-item active ">
-              <a href="/current" class="nav-link">
-                  Tidsseriedata
-              </a>
-          </li>
-          <li class="nav-item active ">
               <a href="/admin" class="nav-link">
                   Logga in
               </a>
@@ -111,16 +106,12 @@
 
     <!---graf över vattennivån --->
     <div class="graf">
-      <canvas id="Chart"></canvas>
-      <hr>
+        <div class="chart-container" style="position: relative; height:60vh; width:47vw">
+            <canvas id="Chart"></canvas>
+        </div>
     </div>
     <!--- Karta med sensorerna--->
     <div id="karta">
-        <!--- Shitty way to move the dropdown menu down as the chart.js does not respect boundaries --->
-        <p></p>
-        <p></p>
-        <p></p>
-        <button onclick="resetView()">Reset view</button>
         <p>Select data in plot by dragging mouse over the wanted time period. Reset view by clicking on the above button.</p>
         <p></p>
         <!--- Create a dropdown menu to select the sensor to look at. --->
@@ -253,6 +244,8 @@
                 }]
             },
             options: {
+                responsive: true,
+                maintainAspectRatio: false,
                 elements: {
                     point: {
                         radius: 0
@@ -331,12 +324,6 @@
         myChart.update();
         console.log('Updated the plot')
     }
-
-    /* Functions to update the timeseries data ----------------------------- */
-    function resetView(){
-        myChart.resetZoom();
-    }
-
 
     /* Support function for shifting data in filterData */
     function shiftRemainingData(height, i, deltaH){

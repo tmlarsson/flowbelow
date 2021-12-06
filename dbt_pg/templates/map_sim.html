@@ -79,11 +79,6 @@
               </a>
           </li>
           <li class="nav-item active ">
-              <a href="/current" class="nav-link">
-                  Tidsseriedata
-              </a>
-          </li>
-          <li class="nav-item active ">
               <a href="/admin" class="nav-link">
                   Logga in
               </a>
@@ -146,7 +141,7 @@
 
     /* Functions used for map making --------------------------------------- */
 
-    /* Funciton to create base map */
+    /* Function to create base map */
     function makeMap(){
         var crs = new L.Proj.CRS('EPSG:3006','+proj=utm +zone=33 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs',
         {
@@ -326,7 +321,6 @@
                         position: 'average',
                         callbacks: {
                             title: function(item, everything){
-                                let value = item[0].raw;
                                 let time = item[0].label;
                                 /* Calls loadImage with time taken from
                                  * hover over the graph. This is to change
@@ -334,8 +328,8 @@
                                  * hovering in the graph.
                                  */
                                 loadImage(time)
-                                let title = value+' möh.'
-                              return title;
+                                let title = time;
+                                return title;
                             },
                             label: function(item, everything){
                             },
@@ -343,28 +337,28 @@
                     },
                     crosshair: {
                         line: {
-                          color: '#F66',  // crosshair line color
-                          width: 5,        // crosshair line width
+                            color: '#F66',  // crosshair line color
+                            width: 5,       // crosshair line width
                         },
                         sync: {
-                          enabled: false,            // enable trace line syncing with other charts
-                          group: 1,                 // chart group
-                          suppressTooltips: true,   // suppress tooltips when showing a synced tracer
+                            enabled: false,           // enable trace line syncing with other charts
+                            group: 1,                 // chart group
+                            suppressTooltips: true,   // suppress tooltips when showing a synced tracer
                         },
                         zoom: {
-                          enabled: true,                                      // enable zooming
-                          zoomboxBackgroundColor: 'rgba(66,133,244,0.2)',     // background color of zoom box
-                          zoomboxBorderColor: '#48F',                         // border color of zoom box
-                          zoomButtonText: 'Reset Zoom',                       // reset zoom button text
-                          zoomButtonClass: 'reset-zoom',                      // reset zoom button class
+                            enabled: true,                                      // enable zooming
+                            zoomboxBackgroundColor: 'rgba(66,133,244,0.2)',     // background color of zoom box
+                            zoomboxBorderColor: '#48F',                         // border color of zoom box
+                            zoomButtonText: 'Reset Zoom',                       // reset zoom button text
+                            zoomButtonClass: 'reset-zoom',                      // reset zoom button class
                         },
                         callbacks: {
-                          beforeZoom: () => function(start, end) {                  // called before zoom, return false to prevent zoom
-                            console.log("beforeZoom has run")
+                          beforeZoom: () => function(start, end) {              // called before zoom, return false to prevent zoom
+                              console.log("beforeZoom has run")
                               return true;
                           },
-                          afterZoom: () => function(start, end) {// called after zoom
-                            console.log("afterZoom has run")
+                          afterZoom: () => function(start, end) {               // called after zoom
+                              console.log("afterZoom has run")
                           }
                         }
                     },

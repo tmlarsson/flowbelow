@@ -23,10 +23,3 @@ def map_simulation(request):
         'timesUsed': ST.objects.values('time').distinct().order_by('time')
     }
     return render(request, 'map_sim.html', context)
-
-def current(request):
-    context = {
-        'timeData': ST.objects.all(),
-        'sensor_objects': S.objects.all(),
-    }
-    return render(request, 'current.html', context)
