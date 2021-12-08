@@ -79,7 +79,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'mdhhwxtc',
         'USER': 'mdhhwxtc',
-        'PASSWORD': 'E95CcAvKFHDT87lap17AspZTiwpkaNpj',
+        'PASSWORD': 'BOpDakrPx7va9OuCiexT4cF8O0hl9OvR',
         'HOST': 'tai.db.elephantsql.com',
         'PORT': '5432',
     }
