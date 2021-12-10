@@ -47,12 +47,13 @@ class CustomerAdmin(admin.ModelAdmin):
                 fields = x.split(";")
                 created = Sensor.objects.update_or_create(
                     id_tag=fields[2],
-                    placement=fields[4],
-                    x_cord = fields[6],
-                    y_cord = fields[7],
-                    sensor_type = fields[3],
-                    masl = fields[5],
-                    ref_system = fields[8]
+                    defaults={
+                    'placement' : fields[4],
+                    'x_cord' : fields[6],
+                    'y_cord' : fields[7],
+                    'sensor_type' : fields[3],
+                    'masl' : fields[5],
+                    'ref_system' : fields[8]
                 )
             url = reverse('admin:index')
             return HttpResponseRedirect(url)
@@ -82,12 +83,15 @@ class CustomerAdmin(admin.ModelAdmin):
                 fields = x.split(";")
                 created = Sensor_time_value.objects.update_or_create(
                     row_id = fields[0]+fields[1],
-                    id_tag = fields[0],
-                    time = fields[1],
-                    masl = fields[2],
-                    placement = fields[3],
-                    data_type = fields[4],
-                    filtered = fields[5],
+                    #
+                    defaults = {
+                        'id_tag' : fields[0],
+                        'time' : fields[1],
+                        'masl' : fields[2],
+                        'placement' : fields[3],
+                        'data_type' : fields[4],
+                        'filtered' : fields[5],
+                    }
                 )
             url = reverse('admin:index')
             return HttpResponseRedirect(url)
@@ -116,10 +120,11 @@ class CustomerAdmin(admin.ModelAdmin):
                     continue
                 fields = x.split(";")
                 created = raster_data.objects.update_or_create(
-                    id_tag=fields[0],
-                    masl=fields[1],
-                    ref_system=fields[2],
                     img=fields[3],
+                    defaults={
+                        'id_tag' : fields[0],
+                        'masl' : fields[1],
+                        'ref_system' : fields[2],
                 )
             url = reverse('admin:index')
             return HttpResponseRedirect(url)
