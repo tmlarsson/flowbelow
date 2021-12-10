@@ -53,7 +53,8 @@ class CustomerAdmin(admin.ModelAdmin):
                     'y_cord' : fields[7],
                     'sensor_type' : fields[3],
                     'masl' : fields[5],
-                    'ref_system' : fields[8]
+                    'ref_system' : fields[8],
+                    }
                 )
             url = reverse('admin:index')
             return HttpResponseRedirect(url)
@@ -125,6 +126,7 @@ class CustomerAdmin(admin.ModelAdmin):
                         'id_tag' : fields[0],
                         'masl' : fields[1],
                         'ref_system' : fields[2],
+                    },
                 )
             url = reverse('admin:index')
             return HttpResponseRedirect(url)
