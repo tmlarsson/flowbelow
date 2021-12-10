@@ -219,7 +219,6 @@
     }
 
 
-
     /* Function to get measured masl from sensor at a given time */
     function getHeightFromTime(simulationTime){
 
@@ -243,7 +242,6 @@
             sensors
         }
     }
-
 
 
     /* Function to update map after the sensor in dropdown is changed */
@@ -308,9 +306,6 @@
         lineChartData.labels = [];
         lineChartData.datasets = [];
 
-        const randomNum = () => Math.floor(Math.random() * (235 - 52 + 1) + 52);
-        const randomRGB = () => `rgba(${randomNum()}, ${randomNum()}, ${randomNum()})`;
-
         let rgbColor = ['rgba(207, 119, 133)',
             'rgba(91, 230, 88)',
             'rgba(100,149,237)',
@@ -328,6 +323,7 @@
             dataset.backgroundColor = rgbColor[line];
             dataset.borderColor = rgbColor[line];
             dataset.label = '{{sensor.placement}}';
+            chartLabels.push('{{sensor.placement}}');
             dataset.data = []; //contains the 'Y; axis data
 
             {% for time in timeData %}
@@ -382,8 +378,24 @@
                                  * hovering in the graph.
                                  */
                                 loadImage(time)
-                                let title = time;
-                                return title;
+
+                                /* Updates value in tooltip on graph */
+                                let values = [];
+
+                                for(i=0; i<Object.keys(item).length; i++) {
+
+                                    datasetIndex = item[i].datasetIndex;
+                                    console.log('dataset index: '+datasetIndex);
+                                    try {
+                                        values.push(chartLabels[datasetIndex] + ': Masl. ' + item[i].formattedValue);
+                                    }
+                                    catch(err){
+                                        console.log('Error on loop: '+i)
+                                    }
+
+                                }
+                                console.log('VALUES: '+values)
+                                return values;
                             },
                             label: function(item, everything){
                             },
@@ -422,25 +434,6 @@
 
     }
 
-    /* Function to update plot given a change in sensor dropdown.
-     * Not currently used. */
-    function updatePlot(){
-        let graph_data = [];
-        let graph_times = [];
-        var sensorToLook = getSelectedSensor();
-        {% for dataEntry in timeData %}
-            if ('{{dataEntry.id_tag}}' == sensorToLook) {
-                graph_data.push(Number('{{dataEntry.masl}}'));
-                graph_times.push('{{dataEntry.time}}');
-            }
-        {% endfor %}
-        plotData = filterData(graph_times, graph_data)
-        myChart.data.datasets[0].data = plotData.height;
-        myChart.data.datasets[0].label = 'Data for sensor ' + sensorToLook;
-        myChart.data.labels = plotData.time;
-        myChart.update();
-        console.log('Updated the plot')
-    }
 
     /* Support function for shifting data in filterData */
     function shiftRemainingData(height, i, deltaH){
@@ -506,6 +499,7 @@
     var map;
     var image = [];
     var myChart;
+    var chartLabels = [];
 
     /* Run function to make map */
     makeMap();

@@ -17,7 +17,7 @@ def about(request):
 
 def map_simulation(request):
     context = {
-        'timeData': ST.objects.all(),
+        'timeData': ST.objects.all().order_by('time'),
         'sensor_objects': S.objects.all(),
         'rasterObjects': R.objects.all(),
         'timesUsed': ST.objects.values('time').distinct().order_by('time')
