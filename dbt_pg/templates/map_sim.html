@@ -120,7 +120,7 @@
     output.innerHTML = slider.value;
 
     slider.oninput = function() {
-    output.innerHTML = this.value;
+        output.innerHTML = this.value;
     }
 
 
@@ -285,9 +285,9 @@
              * in the sensor dropdown menu
              */
             if (map.hasLayer(image[i])) {
+                imageNew = L.imageOverlay(imgPath, imageBounds).addTo(map);
                 map.removeLayer(image[i]);
                 console.log('Removed image and added new')
-                imageNew = L.imageOverlay(imgPath, imageBounds).addTo(map);
             }
             else {
                 imageNew = L.imageOverlay(imgPath, imageBounds).addTo(map);
@@ -304,35 +304,60 @@
     /* Function to create plot */
     function plotData() {
 
-        let graph_data = [];
-        let graph_times = [];
-        var sensorToLook = 'A81758FFFE04CDD8'; // getSelectedSensor();
-        {% for dataEntry in timeData %}
-        if ('{{dataEntry.id_tag}}' == sensorToLook) {
-            graph_data.push(Number('{{dataEntry.masl}}'));
-            graph_times.push('{{dataEntry.time}}');
-        }
+        let lineChartData = {};
+        lineChartData.labels = [];
+        lineChartData.datasets = [];
+
+        const randomNum = () => Math.floor(Math.random() * (235 - 52 + 1) + 52);
+        const randomRGB = () => `rgba(${randomNum()}, ${randomNum()}, ${randomNum()})`;
+
+        let rgbColor = ['rgba(207, 119, 133)',
+            'rgba(91, 230, 88)',
+            'rgba(100,149,237)',
+            'rgba(118, 120, 105)',
+            'rgba(55, 85, 93)'];
+
+        /* Loop variable */
+        let line = 0;
+
+        /* Loop over all sensors */
+        {% for sensor in sensor_objects %}
+            y = [];
+            lineChartData.datasets.push({}); //create a new sensor dataset
+            dataset = lineChartData.datasets[line]
+            dataset.backgroundColor = rgbColor[line];
+            dataset.borderColor = rgbColor[line];
+            dataset.label = '{{sensor.placement}}';
+            dataset.data = []; //contains the 'Y; axis data
+
+            {% for time in timeData %}
+                /* Checks to only push data from the correct sensor
+                 * Note that we push separate X and Y values for
+                 * each sensor.
+                 */
+                if ('{{time.id_tag}}' == '{{sensor.id_tag}}') {
+                    y.push({x:'{{time.time}}',y:'{{time.masl}}' });
+                }
+            {% endfor %}
+            lineChartData.datasets[line].data = y; //send new line data to dataset
+            line = line + 1;
         {% endfor %}
 
-        var plotData2 = filterData(graph_times, graph_data)
+        /* Create the time labels for the X axis. This contain every timestamp that is in the database
+         * such that we can plot data from all sensors regardless of where they have data or not.
+         */
+        {% for timeData in timesUsed %}
+                lineChartData.labels.push('{{timeData.time}}');
+        {% endfor %}
+
+        //var plotData2 = filterData(graph_times, graph_data)
 
         const ctx = document.getElementById('Chart').getContext('2d');
         myChart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: plotData2.time,
-                datasets: [{
-                    label: 'Data for sensor ' + sensorToLook,
-                    data: plotData2.height,
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)'
-
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)'
-                    ],
-                    borderWidth: 1
-                }]
+                labels: lineChartData.labels,
+                datasets: lineChartData.datasets,
             },
             options: {
                 elements: {
@@ -394,6 +419,7 @@
                 },
             },
         });
+
     }
 
     /* Function to update plot given a change in sensor dropdown.
