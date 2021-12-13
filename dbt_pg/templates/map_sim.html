@@ -101,11 +101,7 @@
     <div class="graf" id="graf">
         <canvas id="Chart"></canvas>
         <hr>
-        <div class="slidecontainer">
-          <input type="range" min="0" max="1343" value="1" class="slider" step="16" id="myRange">
-          <p>Value: <span id="sliderOut"></span></p>
-          <hr>
-        </div>
+        <button onclick="playSim()">Play simulation</button>
     </div>
 
   </div>
@@ -114,15 +110,6 @@
 
 <!--- Script för den nedre kartan --->
 <script type = "text/javascript">
-
-    let slider = document.getElementById("myRange");
-    let output = document.getElementById("sliderOut");
-    output.innerHTML = slider.value;
-
-    slider.oninput = function() {
-        output.innerHTML = this.value;
-    }
-
 
     /* Function to create the height value table when a different sensor
      * is chosen in the sensor table
@@ -142,7 +129,7 @@
         var selectList = document.createElement("select");
         selectList.setAttribute("id", "listTime");
 
-        selectList.addEventListener('change', loadImage);
+        selectList.addEventListener('change', loadImage());
         myDiv.appendChild(selectList);
 
         /* Create and append the options */
@@ -239,7 +226,8 @@
 
         return {
             heightUsed,
-            sensors
+            sensors,
+            simulationTime
         }
     }
 
@@ -260,9 +248,10 @@
         }
         else {
             simulationTime = simulationTime2;
+            console.log("ELSE")
         }
 
-        var {heightUsed, sensors} = getHeightFromTime(simulationTime);
+        var {heightUsed, sensors, timesUsed} = getHeightFromTime(simulationTime);
 
         /* Define variables */
         var imgPath;
@@ -298,6 +287,34 @@
 
     }
 
+
+    /* Function to play back a simulation */
+    function playSim(){
+        /* Create inital arrays to store data */
+        var heightData = [];
+        var simulationTime;
+        var y;
+
+        /* Get all times from database */
+        {% for times in timesUsed %}
+            heightData.push(getHeightFromTime('{{times.time}}'));
+        {% endfor %}
+
+        //console.log(heightData[0].simulationTime)
+
+        var x;
+        for(i=30; i<60; i++){ //heightData.length
+            (function(i){
+                window.setTimeout(function(){
+                    x = heightData[i].simulationTime;
+                    console.log('Time used: '+x);
+                    loadImage(x);
+                    console.log('On loop: '+i)
+                }, i * 100);
+              }(i));
+        }
+
+    }
 
     /* Function to create plot */
     function plotData() {
@@ -491,9 +508,6 @@
     /* --------------------------------------------------------------------- */
     /* --------------------------------------------------------------------- */
     /* -------Using the above defined functions to create site-------------- */
-
-    /* Make the initial table ---------------------------------------------- */
-    createTimeTable()
 
     /* Define global variables */
     var map;
