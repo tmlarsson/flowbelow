@@ -90,14 +90,18 @@
 
   <div class="nothead">
     <!--- karta över utbredning--->
-    <div id="utbredning"></div>
+    <div id="utbredning">
+      <div class="graf" id="graf">
+          <canvas id="Chart"></canvas>
+          <hr>
+          <button onclick="playSim()">Play simulation</button>
+      </div>
+
+
+    </div>
 
     <!---graf över vattennivån --->
-    <div class="graf" id="graf">
-        <canvas id="Chart"></canvas>
-        <hr>
-        <button onclick="playSim()">Play simulation</button>
-    </div>
+
 
   </div>
 
@@ -526,7 +530,7 @@
     makeMap();
 
     /* Create the initial plot */
-    plotData()
+    plotData();
 
 
   </script>

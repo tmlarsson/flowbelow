@@ -27,9 +27,10 @@ h1{
  #graf{
  }
 .graf{
-  width: 50%;
+  width: 40%;
   height: 92vh;
   float:right;
+  z-index: 1;
 }
 
 .nothead{
@@ -37,7 +38,8 @@ h1{
   height: 92vh;
 }
 #utbredning{
-  width: 50%;
+  width: 100%;
   height: 92vh;
   float:left;
+  z-index: 0;
 }
