@@ -255,6 +255,7 @@
         var cornerUL = L.latLng(63.840277,20.290099)
         var cornerLR = L.latLng(63.816073,20.336459)
         var imageBounds = L.latLngBounds(cornerUL, cornerLR);
+        var imageNew = [];
 
         for (var i = 0; i < sensors.length; i++) {
 
@@ -267,19 +268,34 @@
              * in the sensor dropdown menu
              */
             if (map.hasLayer(image[i])) {
-                imageNew = L.imageOverlay(imgPath, imageBounds).addTo(map);
-                map.removeLayer(image[i]);
+                imageNew[i] = L.imageOverlay(imgPath, imageBounds, {opacity: 0}).addTo(map);
+                //image[i].setOpacity(0);
+                //map.removeLayer(image[i]);
                 console.log('Removed image and added new')
             }
             else {
-                imageNew = L.imageOverlay(imgPath, imageBounds).addTo(map);
+                imageNew[i] = L.imageOverlay(imgPath, imageBounds).addTo(map);
                 console.log('Added imageNew')
-
             }
-            /* Update the image variable to contain the newest simulation on map */
-            image[i] = imageNew;
         }
 
+        if (map.hasLayer(image[0])) {
+            console.log("Not first run")
+            for (var i = 0; i < image.length; i++) {
+                imageNew[i].setOpacity(1);
+                image[i].setOpacity(0.9);
+                image[i].setOpacity(0.5);
+                image[i].setOpacity(0.3);
+                image[i].setOpacity(0);
+            }
+            for (var i = 0; i < image.length; i++) {
+                map.removeLayer(image[i]);
+            }
+
+        }
+
+        /* Update the image variable to contain the newest simulation on map */
+        image = imageNew;
     }
 
 
@@ -287,15 +303,11 @@
     function playSim(){
         /* Create inital arrays to store data */
         var heightData = [];
-        var simulationTime;
-        var y;
 
         /* Get all times from database */
         {% for times in timesUsed %}
             heightData.push(getHeightFromTime('{{times.time}}'));
         {% endfor %}
-
-        //console.log(heightData[0].simulationTime)
 
         var x;
         for(i=30; i<60; i++){ //heightData.length
