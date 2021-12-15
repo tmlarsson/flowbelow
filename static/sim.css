@@ -1,0 +1,44 @@
+h1{
+  font-size: 3vW;
+}
+
+.all{
+  width: 100%;
+  height: 100vh;
+}
+
+.heading{
+  width: 100%;
+  height: 8vh;
+}
+
+.logga{
+  width:20%;
+  /*background-color: red;*/
+  float: left;
+  margin-right: 5%;
+  left: 5%;
+
+}
+.rubrik{
+  /*background-color: green;*/
+  width: 60%;
+}
+#utbredning {
+  width: 100%;
+  height: 92vh;
+  position: relative;
+}
+.graf {
+  width: 50%;
+  height: auto;
+  position: absolute;
+  top: 0;
+  right: 0;
+  overflow: auto;
+}
+
+#graf2 {
+  z-index: 998;
+  background-color: white;
+}
