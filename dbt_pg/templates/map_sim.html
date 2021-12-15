@@ -97,9 +97,7 @@
             <button onclick="playSim()">Play simulation</button>
         </div>
     </div>
-
   </div>
-
 </div>
 
 <!--- Script för den nedre kartan --->
@@ -159,7 +157,8 @@
         map = L.map('utbredning', {
             crs: crs
             }
-        ).setView([63.834219,20.315930],12)
+        ).setView([63.830590, 20.327520],12)
+
 
         L.tileLayer('http://api.geosition.com/tile/osm-bright-3006/{z}/{x}/{y}.png', {
           maxZoom: crs.options.resolutions.length,
@@ -316,7 +315,7 @@
                     console.log('Time used: '+x);
                     loadImage(x);
                     console.log('On loop: '+i)
-                }, i * 100);
+                }, i * 200);
               }(i));
         }
 
