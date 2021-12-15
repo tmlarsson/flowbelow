@@ -11,7 +11,6 @@
 
     {% load static %}
     <link href="{% static 'sim.css' %}" rel="stylesheet"/>
-    <link href="{% static 'sliderStyle.css' %}" rel="stylesheet"/>
 
     <!--- leaflet --->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
@@ -23,7 +22,8 @@
     crossorigin=""></script>
 
     <!--- p5 --->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js" integrity="sha512-N4kV7GkNv7QR7RX9YF/olywyIgIwNvfEe2nZtfyj73HdjCUkAfOBDbcuJ/cTaN04JKRnw1YG1wnUyNKMsNgg3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js" integrity="sha512-N4kV7GkNv7QR7RX9YF/olywyIgIwNvfEe2nZtfyj73HdjCUkAfOBDbcuJ/cTaN04JKRnw1YG1wnUyNKMsNgg3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
     <!--- för att göra grafen --->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.6.0/dist/chart.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js" integrity="sha512-UXumZrZNiOwnTcZSHLOfcTs0aos2MzBWHXOHOuB0J/R44QB0dwY5JgfbvljXcklVf65Gc4El6RjZ+lnwd2az2g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -40,7 +40,6 @@
 
     {% load static %}
     <script src="{% static 'proj4leaflet.js' %}"></script>
-    <!--- Load external functions from static --->
 
     <!--- Load plugin for vertical crosshair to chart js --->
     {% load static %}
@@ -82,10 +81,6 @@
   </div>
   </div>
 
-  <!-- Slider -->
-
-
-
   <!----------->
 
   <div class="nothead">
@@ -93,14 +88,13 @@
     <div class="utbredning" id="utbredning">
         <div class="graf" id="graf2">
             <canvas id="Chart"></canvas>
-            <hr>
             <button onclick="playSim()">Play simulation</button>
         </div>
     </div>
   </div>
 </div>
 
-<!--- Script för den nedre kartan --->
+<!--- Script för startsidan --->
 <script type = "text/javascript">
 
     /* Function to get current value in time dropdown */
@@ -271,6 +265,8 @@
 
     }
 
+    /* Functions used for graph -------------------------------------------- */
+
     /* Function to create plot */
     function plotData() {
 
@@ -407,6 +403,8 @@
     }
 
 
+    /* Functions used for filtering ---------------------------------------- */
+
     /* Support function for shifting data in filterData */
     function shiftRemainingData(height, i, deltaH){
         for(let j = i+1; j<height.lenght; j++){
@@ -476,12 +474,6 @@
     /* Create the initial plot */
     plotData();
 
-
-  </script>
-
-
-
-
-
+</script>
 </body>
 </html>
