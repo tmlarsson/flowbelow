@@ -87,6 +87,7 @@
     <!--- karta över utbredning--->
     <div class="utbredning" id="utbredning">
         <div class="graf" id="graf2">
+            <!--- Separat container för chart js graphen --->
             <canvas id="Chart"></canvas>
             <button onclick="playSim()">Play simulation</button>
         </div>
@@ -98,7 +99,6 @@
 <script type = "text/javascript">
 
     /* Function to get current value in time dropdown */
-
     function getSelectedTime(){
         var selectedTime = document.getElementById("listTime").value;
         return selectedTime
@@ -199,20 +199,17 @@
         var imageBounds = L.latLngBounds(cornerUL, cornerLR);
         var imageNew = [];
 
+        /* Loop over all sensors in the database */
         for (var i = 0; i < sensors.length; i++) {
-
 
             /* Set path to image of simulation */
             imgPath = 'static/Simulations/'+sensors[i]+'_waterlevel_'+heightUsed[i]+'.PNG'
 
-            /* remove image layer if it already exists.
-             * Then add a new simulation based on the value
-             * in the sensor dropdown menu
+            /* If image is already present, loads all images with opacity 0.
+             * Else. Add the initial images.
              */
             if (map.hasLayer(image[i])) {
                 imageNew[i] = L.imageOverlay(imgPath, imageBounds, {opacity: 0}).addTo(map);
-                //image[i].setOpacity(0);
-                //map.removeLayer(image[i]);
                 console.log('Removed image and added new')
             }
             else {
@@ -221,6 +218,9 @@
             }
         }
 
+        /* If not the first time images are added, below fades in and out the new
+         * and the old images to reduce flicker. After that, removes all old images.
+         */
         if (map.hasLayer(image[0])) {
             console.log("Not first run")
             for (var i = 0; i < image.length; i++) {
