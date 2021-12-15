@@ -103,37 +103,6 @@
 <!--- Script för den nedre kartan --->
 <script type = "text/javascript">
 
-    /* Function to create the height value table when a different sensor
-     * is chosen in the sensor table
-     */
-    function createTimeTable() {
-        /* Get right div to append table */
-        var myDiv = document.getElementById("graf");
-
-        /* Create array of value to add to table */
-        let timesToLook = [];
-
-        {% for time in timesUsed %}
-            timesToLook.push('{{time.time}}');
-        {% endfor %}
-
-        /* Create and append select list */
-        var selectList = document.createElement("select");
-        selectList.setAttribute("id", "listTime");
-
-        selectList.addEventListener('change', loadImage());
-        myDiv.appendChild(selectList);
-
-        /* Create and append the options */
-        for (var i = 0; i < timesToLook.length; i++) {
-            var option = document.createElement("option");
-            option.setAttribute("value", timesToLook[i]);
-            option.text = timesToLook[i];
-            selectList.appendChild(option);
-        }
-    }
-
-
     /* Function to get current value in time dropdown */
 
     function getSelectedTime(){
@@ -149,7 +118,7 @@
         var crs = new L.Proj.CRS('EPSG:3006','+proj=utm +zone=33 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs',
         {
             resolutions: [
-                8192, 4096, 2048, 1024, 512, 256, 128, 64, 32, 16, 8, 4, 2, 1
+                8192, 4096, 2048, 1024, 512, 256, 128, 64, 32, 16, 8, 4, 2, 1, 0.5, 0.25
             ],
             origin: [0,0],
         })
@@ -166,25 +135,6 @@
           continuousWorld: true,
           attribution: 'Map data © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>, Imagery © <a href="http://www.kartena.se/">Kartena</a>'
         }).addTo(map);
-
-        /* Loop to add all installed sensors to the current map
-        * Code has to be moved to .html so the queryset can be added
-        */
-
-        /*
-        var x_cord;
-        var y_cord;
-
-        {% for dataEntry in sensor_objects %}
-        // Get coordinates from the database
-        x_cord = dataEntry.x_cord
-        y_cord = dataEntry.y_cord
-
-        /* Add markers to the map
-        L.marker([x_cord,y_cord]).addTo(mymap);
-
-        {% endfor %}
-        */
 
 
         /* Manual way to add markers to map
